@@ -197,9 +197,10 @@ export function parseChangenoteContent(
 
 	const { frontmatter, title, body } = parsed;
 
-	// pr is a reserved metadata key; package and bump are required
-	const pr = typeof frontmatter.pr === "number" ? frontmatter.pr : undefined;
 	const bump = frontmatter.bump;
+	const pr = typeof frontmatter.pr === "number" ? frontmatter.pr : undefined;
+	const author =
+		typeof frontmatter.author === "string" ? frontmatter.author : undefined;
 
 	if (typeof bump !== "string" || !isValidBump(bump)) {
 		throw new Error(
@@ -210,6 +211,7 @@ export function parseChangenoteContent(
 	return {
 		id,
 		bump,
+		author,
 		title,
 		body,
 		...(pr != null && { pr }),
