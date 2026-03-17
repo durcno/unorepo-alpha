@@ -54,7 +54,7 @@ export async function initCommand(): Promise<void> {
 	p.log.success(`Created ${CONFIG_FILE_NAME}`);
 
 	// GitHub Actions workflows
-	const workflowsDir = join(rootDir, ".github", "workflows", "unorepo");
+	const workflowsDir = join(rootDir, ".github", "workflows");
 	await fs.mkdir(workflowsDir, { recursive: true });
 
 	const installCommands: Record<PackageManager, string> = {
@@ -75,6 +75,7 @@ export async function initCommand(): Promise<void> {
 		"tag.yml",
 		join(workflowsDir, "tag.yml"),
 		rootDir,
+		{ __CACHE__: cacheNames[pm] },
 	);
 	await writeTemplate(
 		tmplDir,
