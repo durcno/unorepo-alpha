@@ -110,10 +110,13 @@ export function createGitOps(repoDir: string = ".") {
 				git.getConfig("user.email"),
 			]);
 			if (!nameResult.value) {
-				await git.addConfig("user.name", "github-actions");
+				await git.addConfig("user.name", "github-actions[bot]");
 			}
 			if (!emailResult.value) {
-				await git.addConfig("user.email", "github-actions@github.com");
+				await git.addConfig(
+					"user.email",
+					"41898282+github-actions[bot]@users.noreply.github.com",
+				);
 			}
 		},
 	};
