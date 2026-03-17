@@ -20,7 +20,7 @@ export interface Changenote {
 }
 
 /** Prepare configuration written by the `prepare` command */
-export type PrepareConfig = { newVersion: string };
+export type PrepareConfig = { newVersion: string; try?: number };
 
 /** Commit metadata extracted from git history */
 export interface ChangenoteCommit {

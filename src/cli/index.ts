@@ -4,6 +4,7 @@ import { changeCommand } from "./commands/change";
 import { commitCommand } from "./commands/commit";
 import { initCommand } from "./commands/init";
 import { prepareCommand } from "./commands/prepare";
+import { retryCommand } from "./commands/retry";
 import { tagCommand } from "./commands/tag";
 import { versionCommand } from "./commands/version";
 
@@ -53,6 +54,15 @@ program
 	.option("--publish", "Run publisher plugins after pushing (implies --push)")
 	.option("--release", "Run releaser plugins after pushing (implies --push)")
 	.action(versionCommand);
+
+program
+	.command("retry")
+	.description(
+		"Increment the try counter in prepare.json and optionally commit/push (for CI retries)",
+	)
+	.option("--commit", "Commit the updated prepare config")
+	.option("--push", "Push to origin after committing (implies --commit)")
+	.action((options) => retryCommand(options));
 
 program
 	.command("tag")

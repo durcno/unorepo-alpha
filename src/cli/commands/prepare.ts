@@ -63,7 +63,7 @@ export async function prepareCommand(
 		process.exit(0);
 	}
 
-	const config: PrepareConfig = { newVersion: versionBump.newVersion };
+	const config: PrepareConfig = { newVersion: versionBump.newVersion, try: 1 };
 	const filePath = await writePrepareConfig(changenoteDir, config);
 	p.log.success(`Wrote prepare config: ${relative(rootDir, filePath)}`);
 
