@@ -1,0 +1,109 @@
+/** Semantic version bump type */
+export type BumpType = "major" | "minor" | "patch";
+
+/** Parsed changenote from a markdown file */
+export interface Changenote {
+	/** Unique ID derived from the filename (without extension) */
+	id: string;
+	/** Package name from frontmatter */
+	bump: BumpType;
+	/** Author who created the changenote */
+	author?: string;
+	/** Pull request that created this changenote */
+	pr?: number;
+	/** Title from the first # heading */
+	title: string;
+	/** Markdown body content after the title heading */
+	body: string;
+	/** Relative file path to the changenote markdown file */
+	filePath: string;
+}
+
+/** Prepare configuration written by the `prepare` command */
+export type PrepareConfig = { newVersion: string };
+
+/** Commit metadata extracted from git history */
+export interface ChangenoteCommit {
+	/** Commit hash that introduced the changenote file */
+	commitHash?: string;
+	/** Contributors who authored/edited the changenote file */
+	commitAuthors: CommitAuthor[];
+}
+
+/** A contributor extracted from git history */
+export interface CommitAuthor {
+	name: string;
+	email: string;
+}
+
+/** A resolved version bump for a single package */
+export interface VersionBump {
+	packageName: string;
+	/** Current version from package.json */
+	currentVersion: string;
+	/** New version after applying the bump */
+	newVersion: string;
+	/** The highest bump type applied */
+	bump: BumpType;
+}
+
+/**
+ * A changelog generator plugin function.
+ * Receives a VersionBump and returns formatted changelog content.
+ */
+export type ChangelogGenerator = (
+	bump: VersionBump,
+	changenotes: (Changenote & { commit: ChangenoteCommit })[],
+	config: UnorepoConfig,
+) => string;
+
+/**
+ * A changelog saver plugin function.
+ * Called before git commit during the version command.
+ * Receives the generated changelog markdown and version bump info,
+ * and is responsible for persisting the changelog in the codebase.
+ */
+export type ChangelogSaver = (props: {
+	changelog: string;
+	versionBump: VersionBump;
+	configDir: string;
+}) => Promise<string | string[] | undefined> | string | string[] | undefined;
+
+/**
+ * A releaser plugin function.
+ * Called after the git commit during the version command.
+ * Responsible for publishing a release (e.g. creating a GitHub release).
+ */
+export type ReleaserPlugin = (props: {
+	versionBump: VersionBump;
+	tagName: string;
+	changelog: string;
+	config: UnorepoConfig;
+}) => Promise<void> | void;
+
+/**
+ * A publisher plugin function.
+ * Called after the git commit and tag during the version command.
+ * Responsible for publishing the package to a registry (e.g. npm publish).
+ */
+export type PublisherPlugin = (props: {
+	pkgJsonPath: string;
+	versionBump: VersionBump;
+	config: UnorepoConfig;
+}) => Promise<void> | void;
+
+/** Configuration for Unorepo */
+export interface UnorepoConfig {
+	repository: {
+		owner: string;
+		name: string;
+	};
+	changelog?: {
+		generator: ChangelogGenerator;
+		saver?: ChangelogSaver;
+	};
+	/** List of releaser plugins called after git commit during the version command */
+	releasers?: ReleaserPlugin[];
+	/** List of publisher plugins called after releasers during the version command */
+	publishers?: PublisherPlugin[];
+}

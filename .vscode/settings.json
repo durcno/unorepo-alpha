@@ -1,0 +1,11 @@
+{
+	"chat.useAgentsMdFile": true,
+	"js/ts.preferences.preferTypeOnlyAutoImports": true,
+	"js/ts.preferences.importModuleSpecifier": "relative",
+	"[typescript][javascript][json][jsonc]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"editor.codeActionsOnSave": {
+		"source.organizeImports.biome": "always"
+	}
+}

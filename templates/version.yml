@@ -1,0 +1,30 @@
+name: Unorepo Version
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".changenotes/prepare.json"
+
+permissions:
+  contents: write
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 25
+          cache: __CACHE__
+      - name: Install dependencies
+        run: __INSTALL__
+      - name: Build package
+        run: npm run build
+      - name: Release version
+        run: npx unorepo-alpha version --commit --tag --push --publish --release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

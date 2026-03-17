@@ -1,0 +1,49 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"includes": [
+			"*.{ts,mts,json}",
+			"src/*.{ts,json}",
+			"src/**/*.{ts,json}",
+			"{tests,website}/*.{ts,json}",
+			"tests/**/*.{ts,json}",
+			"website/{blog,docs,src}/**/*.{ts,tsx,mdx,js,cjs,json}",
+			"!website/docs/api/**/*",
+			".vscode/*"
+		],
+		"ignoreUnknown": true
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true
+		}
+	},
+	"json": {
+		"parser": {
+			"allowTrailingCommas": true
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	}
+}

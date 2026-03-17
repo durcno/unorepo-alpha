@@ -1,0 +1,11 @@
+{
+	"hooks": {
+		"PreToolUse": [
+			{
+				"type": "command",
+				"command": ".github/hooks/scripts/pre-test-build.sh",
+				"timeout": 120
+			}
+		]
+	}
+}
