@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 25
-          cache: __CACHE__
+          cache: npm
       - name: Tag changenote
         run: npx unorepo-alpha tag
         env:
