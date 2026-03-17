@@ -37,12 +37,12 @@ export const changelogGenerator: ChangelogGenerator = (
 			}
 			let thanks = "";
 			if (cn.author) {
-				thanks = ` Thanks to [@${cn.author}](https://github.com/${cn.author}) !`;
+				thanks = `- Thanks to [@${cn.author}](https://github.com/${cn.author}) !`;
 			} else if (
 				cn.commit?.commitAuthors &&
 				cn.commit.commitAuthors.length > 0
 			) {
-				thanks = ` Thanks to ${cn.commit.commitAuthors
+				thanks = `- Thanks to ${cn.commit.commitAuthors
 					.map((ca) => `[${ca.name}](mailto:${ca.email})`)
 					.join(", ")} !`;
 			}
