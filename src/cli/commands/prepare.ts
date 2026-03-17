@@ -67,7 +67,7 @@ export async function prepareCommand(
 	const filePath = await writePrepareConfig(changenoteDir, config);
 	p.log.success(`Wrote prepare config: ${relative(rootDir, filePath)}`);
 
-	if (options.commit) {
+	if (options.commit || options.push) {
 		const gitOps = createGitOps(rootDir);
 		await gitOps.add([".changenotes/prepare.json"]);
 		const message = `chore: prepare ${versionBump.packageName}@${versionBump.newVersion}`;
