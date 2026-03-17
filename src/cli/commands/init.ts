@@ -71,18 +71,16 @@ export async function initCommand(): Promise<void> {
 	};
 
 	await writeTemplate(
-		tmplDir,
-		"tag.yml",
+		join(tmplDir, "tag.yml"),
 		join(workflowsDir, "tag.yml"),
-		rootDir,
 		{ __CACHE__: cacheNames[pm] },
+		rootDir,
 	);
 	await writeTemplate(
-		tmplDir,
-		"version.yml",
+		join(tmplDir, "version.yml"),
 		join(workflowsDir, "version.yml"),
-		rootDir,
 		{ __CACHE__: cacheNames[pm], __INSTALL__: installCommands[pm] },
+		rootDir,
 	);
 
 	p.outro("Unorepo initialized!");
@@ -116,18 +114,17 @@ function getRepoFromPackageJson(
 
 /** Copy a template file to dest, skipping with a warning if it already exists. */
 async function writeTemplate(
-	tplDir: string,
-	tplName: string,
+	tplpath: string,
 	destPath: string,
-	rootDir: string,
 	replacements: Record<string, string> = {},
+	rootDir: string,
 ): Promise<void> {
 	const label = relative(rootDir, destPath);
 	try {
 		await fs.access(destPath);
 		p.log.warning(`${label} already exists`);
 	} catch {
-		let content = readFileSync(join(tplDir, tplName), "utf-8");
+		let content = readFileSync(tplpath, "utf-8");
 		for (const [key, value] of Object.entries(replacements)) {
 			content = content.replace(key, value);
 		}
