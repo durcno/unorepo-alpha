@@ -7,8 +7,6 @@ export async function changeCommand(): Promise<void> {
 
 	p.intro("Add a new changenote");
 
-	// Read root package name
-
 	const bump = await p.select({
 		message: "Bump type:",
 		options: [
@@ -46,8 +44,8 @@ export async function changeCommand(): Promise<void> {
 	);
 
 	p.log.success(`Changenote added! ${relative(rootDir, csPath)}`);
-	p.log.info("Add a body if needed.");
-	p.log.info(`Stage changes and ${relative(rootDir, csPath)}.`);
+	p.log.step("Add a body if needed.");
+	p.log.step(`Stage your changes.`);
 	p.outro("Run `unorepo commit` when ready to commit.");
 }
 
