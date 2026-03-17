@@ -103,5 +103,18 @@ export function createGitOps(repoDir: string = ".") {
 		async pushTags(branch?: string): Promise<void> {
 			await git.push("origin", branch, ["--tags"]);
 		},
+
+		async ensureGitIdentity(): Promise<void> {
+			const [nameResult, emailResult] = await Promise.all([
+				git.getConfig("user.name"),
+				git.getConfig("user.email"),
+			]);
+			if (!nameResult.value) {
+				await git.addConfig("user.name", "github-actions");
+			}
+			if (!emailResult.value) {
+				await git.addConfig("user.email", "github-actions@github.com");
+			}
+		},
 	};
 }

@@ -127,6 +127,7 @@ export async function versionCommand(
 		options.publish ||
 		options.release
 	) {
+		await gitOps.ensureGitIdentity();
 		await gitOps.add(trackedFiles);
 		const message = `Release ${pkgJson.name}@${newVersion}`;
 		await gitOps.commit(message);
