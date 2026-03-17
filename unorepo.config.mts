@@ -19,9 +19,6 @@ export default defineConfig({
 	},
 	publishers: [
 		createNpmPublisher({
-			env: {
-				NPM_TOKEN: process.env.NPM_TOKEN!,
-			},
 			provenance: true,
 		}),
 	],

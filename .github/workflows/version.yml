@@ -26,7 +26,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build package
         run: npm run build
-      - name: Release version
+      - name: Version
         run: npx unorepo-alpha version --commit --tag --push --publish --release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
