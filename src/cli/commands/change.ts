@@ -122,7 +122,6 @@ function generateId(): string {
 	const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
 	const color = colors[Math.floor(Math.random() * colors.length)];
 	const noun = nouns[Math.floor(Math.random() * nouns.length)];
-	const suffix = Math.random().toString(36).slice(2, 6);
 
-	return `${adj}-${color}-${noun}-${suffix}`;
+	return `${adj}-${color}-${noun}`;
 }
