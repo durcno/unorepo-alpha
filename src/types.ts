@@ -18,8 +18,6 @@ export type Changenote = {
 export type ChangenoteMetadata = {
 	/** Semantic versioning bump information */
 	bump: BumpType;
-	/** Author who created the changenote */
-	author?: string;
 };
 
 /** Commit metadata extracted from git history */

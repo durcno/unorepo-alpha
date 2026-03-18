@@ -1,10 +1,6 @@
 import { join, relative } from "node:path";
 import * as p from "@clack/prompts";
-import {
-	type ChangenoteMetadata,
-	getConfigValue,
-	writeChangenote,
-} from "unorepo-alpha";
+import { type ChangenoteMetadata, writeChangenote } from "unorepo-alpha";
 
 export async function changeCommand(): Promise<void> {
 	const rootDir = process.cwd();
@@ -39,9 +35,6 @@ export async function changeCommand(): Promise<void> {
 	const id = generateId();
 
 	const frontmatter: ChangenoteMetadata = { bump };
-
-	const author = await getConfigValue("githubUsername");
-	if (author) frontmatter.author = author;
 
 	const csPath = await writeChangenote(
 		join(rootDir, ".changenotes"),
