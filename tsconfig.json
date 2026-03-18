@@ -17,5 +17,6 @@
 			"unorepo-alpha": ["./src/"]
 		}
 	},
-	"include": ["src"]
+	"include": ["src"],
+	"exclude": ["src/**/*.config.ts"]
 }

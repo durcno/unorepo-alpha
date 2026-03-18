@@ -13,7 +13,8 @@ const program = new Command();
 program
 	.name("unorepo-alpha")
 	.description("A highly configurable package release manager")
-	.version("0.0.1");
+	// biome-ignore lint/style/noNonNullAssertion: <>
+	.version(process.env.VERSION!);
 
 program
 	.command("init")
@@ -50,6 +51,7 @@ config
 
 program
 	.command("change")
+	.alias("cng")
 	.description("Add a new changenote")
 	.action(changeCommand);
 
@@ -61,6 +63,7 @@ program
 
 program
 	.command("prepare")
+	.alias("prep")
 	.description("Write a prepare config for the next release")
 	.argument("<type>", "Release type: release or prerelease")
 	.argument("[tag]", "Prerelease tag (e.g. alpha, beta). Defaults to alpha")
@@ -70,6 +73,7 @@ program
 
 program
 	.command("version")
+	.alias("vrsn")
 	.description("Apply changenotes and bump version")
 	.option(
 		"--commit",
@@ -86,6 +90,7 @@ program
 
 program
 	.command("reprepare")
+	.alias("reprep")
 	.description(
 		"Increment the try counter in prepare.json and optionally commit/push (for CI retries)",
 	)
