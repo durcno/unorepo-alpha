@@ -11,7 +11,9 @@ export default defineConfig({
 		name: "__REPO__",
 	},
 	changelog: {
-		generator: createChangelogGenerator(),
+		generator: createChangelogGenerator({
+      githubToken: process.env.GITHUB_TOKEN!,
+    }),
 	},
 	publishers: [
 		createNpmPublisher({
