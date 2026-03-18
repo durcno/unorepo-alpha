@@ -17,20 +17,6 @@ export interface ChangelogGeneratorOptions {
 	headerFormat?: string;
 
 	/**
-	 * Custom section header format for bump types.
-	 * Supports template variables:
-	 * - {label}: The bump type label (e.g., "Major Changes")
-	 *
-	 * @default "## {label}"
-	 *
-	 * @example
-	 * ```ts
-	 * sectionHeaderFormat: "### {label}"
-	 * ```
-	 */
-	sectionHeaderFormat?: string;
-
-	/**
 	 * Custom labels for bump types.
 	 * Replaces default labels like "Major Changes", "Minor Changes", etc.
 	 *
@@ -71,7 +57,7 @@ export interface ChangelogGeneratorOptions {
  * @example
  * ```ts
  * const generator = createChangelogGenerator({
- *   headerFormat: "## Release {packageName} v{version}",
+ *   headerFormat: "# Release {packageName} v{version}",
  *   bumpLabels: {
  *     major: "Breaking Changes",
  *     minor: "Features",
@@ -85,7 +71,6 @@ export function createChangelogGenerator(
 ): ChangelogGenerator {
 	const {
 		headerFormat = "# {packageName}@{version}",
-		sectionHeaderFormat = "## {label}",
 		bumpLabels = {},
 		repositoryUrl = "https://github.com/{owner}/{name}",
 	} = options;
@@ -117,8 +102,7 @@ export function createChangelogGenerator(
 			.replace("{name}", repository.name);
 
 		for (const [label, changenotes] of groups) {
-			const sectionHeader = sectionHeaderFormat.replace("{label}", label);
-			lines.push(sectionHeader);
+			lines.push(`## ${label}`);
 
 			for (const cn of changenotes) {
 				const { meta } = cn;
