@@ -48,19 +48,21 @@ export function createGitOps(repoDir: string = ".") {
 		},
 
 		async getFileMeta(filePath: string): Promise<ChangenoteCommit> {
-			const [log, contributors] = await Promise.all([
-				git.log({
-					file: filePath,
-					maxCount: 1,
-					format: { hash: "%H", message: "%s" },
-				}),
-				this.getFileAuthors(filePath),
+			const gitRawLog = await git.raw([
+				"log",
+				"--diff-filter=A",
+				"--follow",
+				`--format={"hash": "%H", "message": "%s"}`,
+				"package.json",
 			]);
 
+			const log = JSON.parse(gitRawLog);
+			const authors = await this.getFileAuthors(filePath);
+
 			return {
-				hash: log.latest?.hash,
-				message: (log.latest as unknown as { message: string })?.message,
-				authors: contributors,
+				hash: log.hash,
+				message: log.message,
+				authors: authors,
 			};
 		},
 
