@@ -12,7 +12,9 @@ export default defineConfig({
 		name: "unorepo-alpha",
 	},
 	changelog: {
-		generator: createChangelogGenerator({}),
+		generator: createChangelogGenerator({
+			githubToken: process.env.GITHUB_TOKEN!,
+		}),
 		saver: createChangelogSaver({
 			filepath: "changelogs/v{version}.md",
 		}),

@@ -60,7 +60,7 @@ export type ChangelogGenerator = (
 	bump: VersionBump,
 	changenotes: (Changenote & { commit: ChangenoteCommit })[],
 	config: UnorepoConfig,
-) => string;
+) => Promise<string>;
 
 /**
  * A changelog saver plugin function.

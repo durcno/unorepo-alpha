@@ -1,6 +1,10 @@
+import { Octokit } from "@octokit/rest";
+
 import type { BumpType, ChangelogGenerator } from "./types";
 
 export interface ChangelogGeneratorOptions {
+	/** GitHub token for using the GitHub API */
+	githubToken: string;
 	/**
 	 * Custom markdown header format.
 	 * Supports template variables:
@@ -67,7 +71,7 @@ export interface ChangelogGeneratorOptions {
  * ```
  */
 export function createChangelogGenerator(
-	options: ChangelogGeneratorOptions = {},
+	options: ChangelogGeneratorOptions,
 ): ChangelogGenerator {
 	const {
 		headerFormat = "# {packageName}@{version}",
@@ -75,8 +79,10 @@ export function createChangelogGenerator(
 		repositoryUrl = "https://github.com/{owner}/{name}",
 	} = options;
 
-	return (versionBump, changenotes, config) => {
+	return async (versionBump, changenotes, config) => {
 		const { repository } = config;
+		const octokit = new Octokit({ auth: options.githubToken });
+
 		const lines: string[] = [];
 
 		// Format header with template variables
@@ -105,7 +111,6 @@ export function createChangelogGenerator(
 			lines.push(`## ${label}`);
 
 			for (const cn of changenotes) {
-				const { meta } = cn;
 				lines.push("");
 
 				const commit = cn.commit?.hash
@@ -123,14 +128,27 @@ export function createChangelogGenerator(
 				}
 
 				let thanks = "";
-				if (meta.author) {
-					thanks = ` - Thanks to [@${meta.author}](https://github.com/${meta.author}) !`;
-				} else if (cn.commit?.authors && cn.commit.authors.length > 0) {
+				if (cn.commit.hash) {
+					const response = await octokit.rest.repos.getCommit({
+						owner: repository.owner,
+						repo: repository.name,
+						ref: cn.commit.hash,
+					});
+
+					const username = response.data.author?.login;
+					if (username) {
+						thanks = ` - Thanks to [@${username}](${repoUrl}/commit/${cn.commit.hash}) !`;
+					}
+				}
+				if (
+					thanks === "" &&
+					cn.commit?.authors &&
+					cn.commit.authors.length > 0
+				) {
 					thanks = ` - Thanks to ${cn.commit.authors
 						.map((ca) => `[${ca.name}](mailto:${ca.email})`)
 						.join(", ")} !`;
 				}
-
 				// First line: commit - pr - thanks
 				lines.push(`- ${commit}${pull}${thanks}`);
 				lines.push("");
