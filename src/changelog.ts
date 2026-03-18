@@ -23,9 +23,10 @@ export const changelogGenerator: ChangelogGenerator = (
 
 	for (const [label, changenotes] of groups) {
 		lines.push(`## ${label}`);
-		lines.push("");
 
 		for (const cn of changenotes) {
+			lines.push("");
+
 			const repoUrl = `https://github.com/${repository.owner}/${repository.name}`;
 			const commit = cn.commit?.commitHash
 				? `[${cn.commit.commitHash.slice(0, 7)}](${repoUrl}/commit/${cn.commit.commitHash})`
@@ -47,7 +48,7 @@ export const changelogGenerator: ChangelogGenerator = (
 					.join(", ")} !`;
 			}
 
-			// First line: commit hash + pr link + thanks
+			// First line: commit - pr - thanks
 			lines.push(`- ${commit}${pull}${thanks}`);
 			lines.push("");
 			lines.push(`  > ${cn.title}`);
