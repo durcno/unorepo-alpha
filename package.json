@@ -1,7 +1,7 @@
 {
 	"name": "unorepo-alpha",
 	"version": "1.0.2",
-	"description": "An automated javascript package release manager",
+	"description": "A highly configurable javascript package release manager",
 	"license": "Apache-2.0",
 	"homepage": "https://unorepo.xyz",
 	"keywords": [],
