@@ -130,20 +130,20 @@ export function createChangelogGenerator(
 
 				let pull = "";
 				if (meta.pr) {
-					pull = `- [PR#${meta.pr}](${repoUrl}/pull/${meta.pr})`;
+					pull = ` - [PR#${meta.pr}](${repoUrl}/pull/${meta.pr})`;
 				} else if (cn.commit) {
 					const firstLine = cn.commit.message?.split("\n")[0];
 					const prMatch = firstLine?.match(/^#(\d+)/);
 					if (prMatch) {
-						pull = `- [PR#${prMatch[1]}](${repoUrl}/pull/${prMatch[1]})`;
+						pull = ` - [PR#${prMatch[1]}](${repoUrl}/pull/${prMatch[1]})`;
 					}
 				}
 
 				let thanks = "";
 				if (meta.author) {
-					thanks = `- Thanks to [@${meta.author}](https://github.com/${meta.author}) !`;
+					thanks = ` - Thanks to [@${meta.author}](https://github.com/${meta.author}) !`;
 				} else if (cn.commit?.authors && cn.commit.authors.length > 0) {
-					thanks = `- Thanks to ${cn.commit.authors
+					thanks = ` - Thanks to ${cn.commit.authors
 						.map((ca) => `[${ca.name}](mailto:${ca.email})`)
 						.join(", ")} !`;
 				}
