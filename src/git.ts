@@ -53,7 +53,7 @@ export function createGitOps(repoDir: string = ".") {
 				"--diff-filter=A",
 				"--follow",
 				`--format={"hash": "%H", "message": "%s"}`,
-				"package.json",
+				filePath,
 			]);
 
 			const log = JSON.parse(gitRawLog);
