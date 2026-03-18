@@ -6,17 +6,9 @@ export function createGitOps(repoDir: string = ".") {
 	const git: SimpleGit = simpleGit(repoDir);
 
 	return {
-		async getFileCommitHash(path: string): Promise<string | undefined> {
-			try {
-				const log = await git.log({
-					file: path,
-					maxCount: 1,
-					format: { hash: "%H" },
-				});
-				return log.latest?.hash;
-			} catch {
-				return undefined;
-			}
+		async currentBranch() {
+			const print = await git.raw(["branch", "--show-current"]);
+			return print.trim();
 		},
 
 		async getFileAuthors(file: string): Promise<CommitAuthor[]> {
@@ -108,6 +100,10 @@ export function createGitOps(repoDir: string = ".") {
 
 		async push(branch?: string): Promise<void> {
 			await git.push("origin", branch);
+		},
+
+		async pushSetUpstream(branch: string): Promise<void> {
+			await git.raw(["push", "--set-upstream", "origin", branch]);
 		},
 
 		async pushTags(branch?: string): Promise<void> {

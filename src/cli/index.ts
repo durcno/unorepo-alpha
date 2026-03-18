@@ -57,6 +57,7 @@ program
 program
 	.command("commit")
 	.description("Commit staged changenote using its title as the commit message")
+	.option("--push", "Push to origin after committing")
 	.action(commitCommand);
 
 program

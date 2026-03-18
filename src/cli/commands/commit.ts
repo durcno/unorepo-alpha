@@ -2,7 +2,9 @@ import { join, relative } from "node:path";
 import * as p from "@clack/prompts";
 import { createGitOps, parseChangenotefile } from "unorepo-alpha";
 
-export async function commitCommand(): Promise<void> {
+export async function commitCommand(options: {
+	push?: boolean;
+}): Promise<void> {
 	const rootDir = process.cwd();
 
 	p.intro("Commit staged changenote");
@@ -37,8 +39,13 @@ export async function commitCommand(): Promise<void> {
 	const changenote = await parseChangenotefile(changenoteFile);
 
 	p.log.info(`Commiting: "${relative(rootDir, changenoteFile)}"`);
-
 	await gitOps.commit(changenote.title);
-
 	p.outro(`Committed: "${changenote.title}"`);
+
+	if (options.push) {
+		const branch = await gitOps.currentBranch();
+		p.log.info(`Pushing to origin/${branch}`);
+		await gitOps.pushSetUpstream(await gitOps.currentBranch());
+		p.outro(`Pushed to origin/${branch}`);
+	}
 }
