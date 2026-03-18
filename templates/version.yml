@@ -16,6 +16,7 @@ jobs:
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
+      - run: git fetch --unshallow
       - uses: actions/setup-node@v4
         with:
           node-version: 25
