@@ -7,7 +7,6 @@ import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import { unified } from "unified";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import { CONFIG_FILE_NAME } from "./const";
 import type {
 	BumpType,
 	Changenote,
@@ -298,10 +297,8 @@ export async function consumePrepareConfig(
 }
 
 /** Load the Unorepo config */
-export async function loadConfig(dir: string): Promise<UnorepoConfig> {
-	const configPath = join(dir, CONFIG_FILE_NAME);
-
-	const module = await import(configPath);
+export async function loadConfig(path: string): Promise<UnorepoConfig> {
+	const module = await import(path);
 	const config = module.default as UnorepoConfig | undefined;
 	if (!config || typeof config !== "object") {
 		throw new Error();

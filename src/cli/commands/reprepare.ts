@@ -27,9 +27,9 @@ export async function reprepareCommand(
 
 	const currentTry = existing.try ?? 1;
 	const nextTry = currentTry + 1;
-	const config = { ...existing, try: nextTry };
+	const prepareconfig = { ...existing, try: nextTry };
 
-	const filePath = await writePrepareConfig(changenoteDir, config);
+	const filePath = await writePrepareConfig(changenoteDir, prepareconfig);
 	p.log.success(
 		`Updated prepare config (try: ${nextTry}): ${relative(rootDir, filePath)}`,
 	);

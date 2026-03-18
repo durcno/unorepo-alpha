@@ -1,20 +1,19 @@
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import * as p from "@clack/prompts";
 import {
 	applyVersionBump,
-	type ChangelogGenerator,
 	type Changenote,
 	type ChangenoteCommit,
 	consumeChangenotes,
 	consumePrepareConfig,
 	createGitOps,
-	changelogGenerator as defaultChangelogGenerator,
 	loadConfig,
 	readChangenotes,
 	readPackageJson,
 	readPrepareConfig,
 	type VersionBump,
 } from "unorepo-alpha";
+import { CONFIG_FILE_NAME } from "../../const";
 
 export interface VersionCommandOptions {
 	commit?: boolean;
@@ -28,14 +27,14 @@ export async function versionCommand(
 	options: VersionCommandOptions = {},
 ): Promise<void> {
 	const rootDir = process.cwd();
-	const config = await loadConfig(rootDir);
+	const config = await loadConfig(join(rootDir, CONFIG_FILE_NAME));
 
-	p.intro("Applying changenotes and bumping version...");
+	p.intro("Reading prepare.json...");
 
-	const changenoteDir = join(rootDir, ".changenotes");
+	const changenotesDir = join(rootDir, ".changenotes");
 
 	// Read the prepare config written by `prepare` command
-	const prepareConfig = await readPrepareConfig(changenoteDir);
+	const prepareConfig = await readPrepareConfig(changenotesDir);
 
 	if (!prepareConfig) {
 		p.log.warning("No prepare config found.");
@@ -45,18 +44,10 @@ export async function versionCommand(
 	}
 
 	const { newVersion } = prepareConfig;
-
-	// Read all changenotes
-	const allChangenotes = await readChangenotes(changenoteDir);
-
-	if (allChangenotes.length === 0) {
-		p.log.warning("No changenotes found. Run `unorepo change` first.");
-		p.outro("Nothing to do.");
-		return;
-	}
-
-	p.log.info(`Found ${allChangenotes.length} changenote(s)`);
 	p.log.message(`Version: ${newVersion}`);
+
+	const allChangenotes = await readChangenotes(changenotesDir);
+	p.log.info(`Found ${allChangenotes.length} changenote(s)`);
 
 	// Enrich changenotes with git metadata
 	const gitOps = createGitOps(rootDir);
@@ -88,12 +79,16 @@ export async function versionCommand(
 	const trackedFiles: string[] = [pkgJsonPath];
 
 	applyVersionBump(versionBump, pkgJsonPath);
-	p.log.success("Updated package.json version");
+	p.log.success(
+		`Updated ${relative(rootDir, pkgJsonPath)} - version: ${newVersion}`,
+	);
 
 	// Generate changelog
-	const changelogGenerator: ChangelogGenerator =
-		config.changelog?.generator ?? defaultChangelogGenerator;
-	const changelog = changelogGenerator(versionBump, changenotes, config);
+	const changelog = config.changelog.generator(
+		versionBump,
+		changenotes,
+		config,
+	);
 
 	// Call changelog saver plugin if configured
 	if (config.changelog?.saver) {
@@ -117,8 +112,8 @@ export async function versionCommand(
 	}
 
 	// Remove prepare config
-	await consumePrepareConfig(changenoteDir);
-	trackedFiles.push(join(changenoteDir, "prepare.json"));
+	await consumePrepareConfig(changenotesDir);
+	trackedFiles.push(join(changenotesDir, "prepare.json"));
 
 	if (
 		options.commit ||
