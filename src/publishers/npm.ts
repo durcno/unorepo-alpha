@@ -31,13 +31,9 @@ export function createNpmPublisher(
 
 		const publishArgs: string[] = ["publish"];
 
-		if (registry) {
-			publishArgs.push("--registry", registry);
-		}
+		if (registry) publishArgs.push("--registry", registry);
 
-		if (provenance) {
-			publishArgs.push("--provenance");
-		}
+		if (provenance) publishArgs.push("--provenance");
 
 		publishArgs.push(...args);
 
