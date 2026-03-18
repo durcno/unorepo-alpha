@@ -44,7 +44,7 @@ export async function calculateVersionBump(
 
 	const bumps = new Set<BumpType>();
 	for (const cn of changenotes) {
-		bumps.add(cn.bump);
+		bumps.add(cn.meta.bump);
 	}
 	const bump = highestBump(Array.from(bumps));
 

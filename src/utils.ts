@@ -1,4 +1,15 @@
 import fs from "node:fs";
+import type { UnorepoConfig } from "./types";
+
+/** Load the Unorepo config */
+export async function loadConfig(path: string): Promise<UnorepoConfig> {
+	const module = await import(path);
+	const config = module.default as UnorepoConfig | undefined;
+	if (!config || typeof config !== "object") {
+		throw new Error();
+	}
+	return config;
+}
 
 /** Read a package.json and return its name and version */
 export function readPackageJson(pkgPath: string): {

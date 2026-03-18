@@ -2,6 +2,7 @@ import { join, relative } from "node:path";
 import * as p from "@clack/prompts";
 import {
 	applyVersionBump,
+	type BumpType,
 	type Changenote,
 	type ChangenoteCommit,
 	consumeChangenotes,
@@ -63,10 +64,10 @@ export async function versionCommand(
 	const pkgJson = readPackageJson(pkgJsonPath);
 
 	// Build the VersionBump from prepare config + changenotes
-	const bumps = new Set(changenotes.map((cn) => cn.bump));
+	const bumps = new Set(changenotes.map((cn) => cn.meta.bump));
 	const bump = ["major", "minor", "patch"].find((b) =>
-		bumps.has(b as Changenote["bump"]),
-	) as VersionBump["bump"];
+		bumps.has(b as BumpType),
+	) as BumpType;
 
 	const versionBump: VersionBump = {
 		packageName: pkgJson.name,

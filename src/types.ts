@@ -2,25 +2,27 @@
 export type BumpType = "major" | "minor" | "patch";
 
 /** Parsed changenote from a markdown file */
-export interface Changenote {
+export type Changenote = {
 	/** Unique ID derived from the filename (without extension) */
 	id: string;
-	/** Package name from frontmatter */
-	bump: BumpType;
-	/** Author who created the changenote */
-	author?: string;
-	/** Pull request that created this changenote */
-	pr?: number;
-	/** Title from the first # heading */
+	/** YAML frontmatter metadata */
+	meta: ChangenoteMetadata;
+	/** Heading from the changenote markdown */
 	title: string;
 	/** Markdown body content after the title heading */
 	body: string;
 	/** Relative file path to the changenote markdown file */
 	filePath: string;
-}
+};
 
-/** Prepare configuration written by the `prepare` command */
-export type PrepareConfig = { newVersion: string; try?: number };
+export type ChangenoteMetadata = {
+	/** Semantic versioning bump information */
+	bump: BumpType;
+	/** Author who created the changenote */
+	author?: string;
+	/** Pull request that created this changenote */
+	pr?: number;
+};
 
 /** Commit metadata extracted from git history */
 export interface ChangenoteCommit {
@@ -46,6 +48,9 @@ export interface VersionBump {
 	/** The highest bump type applied */
 	bump: BumpType;
 }
+
+/** Prepare configuration written by the `prepare` command */
+export type PrepareConfig = { newVersion: string; try?: number };
 
 /**
  * A changelog generator plugin function.
@@ -99,7 +104,13 @@ export interface UnorepoConfig {
 		name: string;
 	};
 	changelog: {
+		/**
+		 * A plugin that generates the changelog from changenotes.
+		 */
 		generator: ChangelogGenerator;
+		/**`
+		 * A plugin that saves the generated changelog in the codebase.
+		 */
 		saver?: ChangelogSaver;
 	};
 	/** List of releaser plugins called after git commit during the version command */

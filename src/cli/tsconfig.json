@@ -17,5 +17,5 @@
 			"unorepo-alpha": ["../"]
 		}
 	},
-	"include": ["*.ts", "./commands"]
+	"include": ["*.ts", "./**/*.ts"]
 }

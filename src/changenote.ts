@@ -7,12 +7,7 @@ import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import { unified } from "unified";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import type {
-	BumpType,
-	Changenote,
-	PrepareConfig,
-	UnorepoConfig,
-} from "./types";
+import type { BumpType, Changenote, PrepareConfig } from "./types";
 
 const VALID_BUMPS = new Set<string>(["major", "minor", "patch"]);
 
@@ -24,7 +19,7 @@ function isValidBump(value: string): value is BumpType {
 export interface ChangenoteMarkdown {
 	/** YAML frontmatter key-value pairs */
 	frontmatter: Record<string, unknown>;
-	/** First `# Heading` text */
+	/** Heading from the changenote markdown */
 	title: string;
 	/** Markdown body after the title heading (may be empty) */
 	body: string;
@@ -197,10 +192,6 @@ export function parseChangenoteContent(
 	const { frontmatter, title, body } = parsed;
 
 	const bump = frontmatter.bump;
-	const pr = typeof frontmatter.pr === "number" ? frontmatter.pr : undefined;
-	const author =
-		typeof frontmatter.author === "string" ? frontmatter.author : undefined;
-
 	if (typeof bump !== "string" || !isValidBump(bump)) {
 		throw new Error(
 			`Invalid bump type "${bump}" in ${filePath}. Must be major, minor, or patch.`,
@@ -209,11 +200,9 @@ export function parseChangenoteContent(
 
 	return {
 		id,
-		bump,
-		author,
+		meta: { ...frontmatter, bump },
 		title,
 		body,
-		...(pr != null && { pr }),
 		filePath,
 	};
 }
@@ -225,12 +214,8 @@ export async function readChangenotes(
 	const pattern = join(changenotesDir, "*.md");
 	const files = await glob(pattern);
 
-	if (files.length === 0) {
-		return [];
-	}
-
 	const changenotes: Changenote[] = [];
-	for (const file of files.sort()) {
+	for (const file of files) {
 		changenotes.push(await parseChangenotefile(file));
 	}
 
@@ -294,14 +279,4 @@ export async function consumePrepareConfig(
 	} catch {
 		// ignore if already removed
 	}
-}
-
-/** Load the Unorepo config */
-export async function loadConfig(path: string): Promise<UnorepoConfig> {
-	const module = await import(path);
-	const config = module.default as UnorepoConfig | undefined;
-	if (!config || typeof config !== "object") {
-		throw new Error();
-	}
-	return config;
 }

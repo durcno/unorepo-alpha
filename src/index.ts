@@ -9,7 +9,6 @@ export function defineConfig(config: UnorepoConfig): UnorepoConfig {
 export { changelogGenerator } from "./changelog";
 export {
 	consumePrepareConfig,
-	loadConfig,
 	parseChangenoteContent,
 	parseChangenotefile,
 	parseFrontmatter,
@@ -40,7 +39,7 @@ export type {
 	UnorepoConfig,
 	VersionBump,
 } from "./types";
-export { readPackageJson } from "./utils";
+export { loadConfig, readPackageJson } from "./utils";
 export {
 	applyVersionBump,
 	consumeChangenotes,

@@ -1,5 +1,5 @@
 import { promises as fs } from "node:fs";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
 import type { ChangelogSaver, VersionBump } from "./types";
 import { escapePackageName } from "./utils";
 
@@ -58,7 +58,7 @@ export function createChangelogSaver(
 		// Resolve to absolute path using rootDir
 		const absolutePath = filepath.startsWith("/")
 			? filepath
-			: `${configDir}/${filepath}`;
+			: join(configDir, filepath);
 
 		// Ensure the directory exists
 		const dir = dirname(absolutePath);

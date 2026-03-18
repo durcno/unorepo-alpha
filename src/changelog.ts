@@ -14,7 +14,7 @@ export const changelogGenerator: ChangelogGenerator = (
 	// Group changenotes by bump type
 	const groups = new Map<string, typeof changenotes>();
 	for (const cn of changenotes) {
-		const cnType = cn.bump;
+		const cnType = cn.meta.bump;
 		if (!cnType) continue;
 		const label = getBumpLabel(cnType);
 		if (!groups.has(label)) groups.set(label, []);
@@ -25,6 +25,7 @@ export const changelogGenerator: ChangelogGenerator = (
 		lines.push(`## ${label}`);
 
 		for (const cn of changenotes) {
+			const { meta } = cn;
 			lines.push("");
 
 			const repoUrl = `https://github.com/${repository.owner}/${repository.name}`;
@@ -33,12 +34,12 @@ export const changelogGenerator: ChangelogGenerator = (
 				: "";
 
 			let pull = "";
-			if (cn.pr) {
-				pull = `- [PR#${cn.pr}](${repoUrl}/pull/${cn.pr})`;
+			if (meta.pr) {
+				pull = `- [PR#${meta.pr}](${repoUrl}/pull/${meta.pr})`;
 			}
 			let thanks = "";
-			if (cn.author) {
-				thanks = `- Thanks to [@${cn.author}](https://github.com/${cn.author}) !`;
+			if (meta.author) {
+				thanks = `- Thanks to [@${meta.author}](https://github.com/${meta.author}) !`;
 			} else if (
 				cn.commit?.commitAuthors &&
 				cn.commit.commitAuthors.length > 0
