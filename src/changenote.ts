@@ -242,14 +242,14 @@ export async function readChangenotes(
 export async function writeChangenote(
 	changenotesDir: string,
 	id: string,
-	bump: BumpType,
+	frontmatter: { bump: BumpType },
 	title: string,
 	body: string,
 ): Promise<string> {
 	await fs.mkdir(changenotesDir, { recursive: true });
 
 	const content = stringifyChangenote({
-		frontmatter: { bump },
+		frontmatter,
 		title,
 		body,
 	});

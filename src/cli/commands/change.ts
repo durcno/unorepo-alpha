@@ -38,7 +38,7 @@ export async function changeCommand(): Promise<void> {
 	const csPath = await writeChangenote(
 		join(rootDir, ".changenotes"),
 		id,
-		bump,
+		{ bump },
 		title,
 		"",
 	);
