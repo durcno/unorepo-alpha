@@ -85,7 +85,7 @@ export async function versionCommand(
 	);
 
 	// Generate changelog
-	const changelog = config.changelog.generator(
+	const changelog = await config.changelog.generator(
 		versionBump,
 		changenotes,
 		config,
