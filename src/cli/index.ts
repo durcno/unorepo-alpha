@@ -12,7 +12,7 @@ const program = new Command();
 
 program
 	.name("unorepo-alpha")
-	.description("A highly configurable javascript package release manager")
+	.description("A highly configurable package release manager")
 	.version("0.0.1");
 
 program

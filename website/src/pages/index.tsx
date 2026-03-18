@@ -35,7 +35,7 @@ export default function Home(): ReactNode {
 	return (
 		<Layout
 			title={`${siteConfig.title}`}
-			description="A highly configurable javascript package release manager"
+			description="A highly configurable package release manager"
 		>
 			<HomepageHeader />
 			<main>
