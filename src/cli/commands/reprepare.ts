@@ -37,7 +37,7 @@ export async function reprepareCommand(
 	if (options.commit || options.push) {
 		const gitOps = createGitOps(rootDir);
 		await gitOps.add([".changenotes/prepare.json"]);
-		const message = `chore: reprepare ${existing.newVersion} (try ${nextTry})`;
+		const message = `chore: prepare ${existing.newVersion} (try ${nextTry})`;
 		await gitOps.commit(message);
 		p.log.success(`Committed: ${message}`);
 
@@ -47,5 +47,5 @@ export async function reprepareCommand(
 		}
 	}
 
-	p.outro(`Done. Reprepare ${nextTry} prepared.`);
+	p.outro(`Done. Prepared for try ${nextTry}.`);
 }
