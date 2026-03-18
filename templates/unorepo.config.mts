@@ -1,5 +1,5 @@
 import {
-	changelogGenerator,
+	createChangelogGenerator,
 	createGitHubReleaser,
 	createNpmPublisher,
 	defineConfig,
@@ -11,7 +11,7 @@ export default defineConfig({
 		name: "__REPO__",
 	},
 	changelog: {
-		generator: changelogGenerator,
+		generator: createChangelogGenerator(),
 	},
 	publishers: [
 		createNpmPublisher({
