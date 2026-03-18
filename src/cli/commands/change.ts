@@ -9,10 +9,10 @@ import {
 export async function changeCommand(): Promise<void> {
 	const rootDir = process.cwd();
 
-	p.intro("Add a new changenote");
+	p.intro("Adding a new changenote!");
 
 	const bump = await p.select({
-		message: "Bump type:",
+		message: "Bump type?",
 		options: [
 			{ value: "patch" as const, label: "patch", hint: "Bug fixes" },
 			{ value: "minor" as const, label: "minor", hint: "New features" },
