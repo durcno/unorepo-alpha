@@ -27,6 +27,6 @@ jobs:
       - name: Build package
         run: npm run build
       - name: Version
-        run: npx unorepo-alpha version --commit --tag --push --publish --release
+        run: node dist/bin.mjs version --commit --tag --push --publish --release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
