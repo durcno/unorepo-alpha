@@ -7,8 +7,6 @@ export async function commitCommand(options: {
 }): Promise<void> {
 	const rootDir = process.cwd();
 
-	p.intro("Commit staged changenote");
-
 	const gitOps = createGitOps(rootDir);
 	const [stagedChangenotes, unstagedChangenotes] = await Promise.all([
 		gitOps.getStagedFiles(/^\.changenotes[\\/].+\.md$/),
@@ -38,7 +36,7 @@ export async function commitCommand(options: {
 	const changenoteFile = join(rootDir, stagedChangenotes[0]);
 	const changenote = await parseChangenotefile(changenoteFile);
 
-	p.log.info(`Commiting: "${relative(rootDir, changenoteFile)}"`);
+	p.intro(`Commiting: "${relative(rootDir, changenoteFile)}"`);
 	await gitOps.commit(changenote.title);
 	p.outro(`Committed: "${changenote.title}"`);
 
