@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/rest";
+import * as semver from "semver";
 import type { ReleaserPlugin } from "../types";
 
 export interface GitHubReleaserOptions {
@@ -21,7 +22,8 @@ export function createGitHubReleaser(
 			name: releaseName,
 			body: changelog,
 			draft: false,
-			prerelease: false,
+			prerelease:
+				semver.parse(versionBump.newVersion)?.prerelease !== undefined,
 		});
 	};
 }
