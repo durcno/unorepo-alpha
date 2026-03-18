@@ -20,20 +20,20 @@ export function createGitOps(repoDir: string = ".") {
 
 				// Deduplicate by email
 				const seen = new Set<string>();
-				const contributors: CommitAuthor[] = [];
+				const commitAuthors: CommitAuthor[] = [];
 
 				for (const entry of log.all) {
 					const key = (entry as unknown as { email: string }).email;
 					if (!seen.has(key)) {
 						seen.add(key);
-						contributors.push({
+						commitAuthors.push({
 							name: (entry as unknown as { name: string }).name,
 							email: key,
 						});
 					}
 				}
 
-				return contributors;
+				return commitAuthors;
 			} catch {
 				return [];
 			}

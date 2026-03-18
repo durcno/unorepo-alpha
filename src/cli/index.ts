@@ -78,7 +78,7 @@ program
 	.option("--tag", "Create a git tag after bumping versions (implies --commit)")
 	.option(
 		"--push",
-		"Push commit and tag to origin after tagging (implies --tag, --commit)",
+		"Push commit and tag to origin after tagging (implies --commit,--tag)",
 	)
 	.option("--publish", "Run publisher plugins after pushing (implies --push)")
 	.option("--release", "Run releaser plugins after pushing (implies --push)")

@@ -20,8 +20,6 @@ export type ChangenoteMetadata = {
 	bump: BumpType;
 	/** Author who created the changenote */
 	author?: string;
-	/** Pull request that created this changenote */
-	pr?: number;
 };
 
 /** Commit metadata extracted from git history */

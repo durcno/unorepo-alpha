@@ -113,9 +113,7 @@ export function createChangelogGenerator(
 					: "";
 
 				let pull = "";
-				if (meta.pr) {
-					pull = ` - [PR#${meta.pr}](${repoUrl}/pull/${meta.pr})`;
-				} else if (cn.commit) {
+				if (cn.commit) {
 					const firstLine = cn.commit.message?.split("\n")[0];
 					const numberMatches = firstLine?.match(/\(#(\d+)\)/);
 					if (numberMatches) {

@@ -116,8 +116,8 @@ export function stringifyChangenote(changenote: ChangenoteMarkdown): string {
 	lines.push("---");
 	lines.push(yaml);
 	lines.push("---");
-	lines.push(changenote.title);
-	lines.push("===");
+	lines.push(`# ${changenote.title}`);
+	lines.push("");
 	lines.push(
 		changenote.body.trim()
 			? changenote.body.trim()
