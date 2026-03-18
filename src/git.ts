@@ -48,12 +48,20 @@ export function createGitOps(repoDir: string = ".") {
 		},
 
 		async getFileMeta(filePath: string): Promise<ChangenoteCommit> {
-			const [commitHash, contributors] = await Promise.all([
-				this.getFileCommitHash(filePath),
+			const [log, contributors] = await Promise.all([
+				git.log({
+					file: filePath,
+					maxCount: 1,
+					format: { hash: "%H", message: "%s" },
+				}),
 				this.getFileAuthors(filePath),
 			]);
 
-			return { commitHash, commitAuthors: contributors };
+			return {
+				hash: log.latest?.hash,
+				message: (log.latest as unknown as { message: string })?.message,
+				authors: contributors,
+			};
 		},
 
 		async getStagedFiles(pattern?: RegExp): Promise<string[]> {

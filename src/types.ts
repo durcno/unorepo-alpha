@@ -27,9 +27,11 @@ export type ChangenoteMetadata = {
 /** Commit metadata extracted from git history */
 export interface ChangenoteCommit {
 	/** Commit hash that introduced the changenote file */
-	commitHash?: string;
+	hash?: string;
+	/** Commit message for the changenote file */
+	message?: string;
 	/** Contributors who authored/edited the changenote file */
-	commitAuthors: CommitAuthor[];
+	authors: CommitAuthor[];
 }
 
 /** A contributor extracted from git history */
