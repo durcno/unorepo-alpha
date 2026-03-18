@@ -23,7 +23,7 @@ export function createGitHubReleaser(
 			body: changelog,
 			draft: false,
 			prerelease:
-				semver.parse(versionBump.newVersion)?.prerelease !== undefined,
+				semver.parse(versionBump.newVersion)?.prerelease?.length !== 0,
 		});
 	};
 }
