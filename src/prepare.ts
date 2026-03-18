@@ -29,7 +29,12 @@ function highestBump(bumps: BumpType[]): BumpType {
 export async function calculateVersionBump(
 	changenotes: (Changenote & { commit?: ChangenoteCommit })[],
 	rootDir: string,
-	prepareConfig?: { type: "release" } | { type: "prerelease"; tag: string },
+	prepareConfig?:
+		| { type: "release" }
+		| {
+				type: "prerelease" | "prepatch" | "preminor" | "premajor";
+				tag: string;
+		  },
 ): Promise<VersionBump> {
 	const pkgJsonPath = join(rootDir, "package.json");
 	const pkgJson = readPackageJson(pkgJsonPath);
@@ -59,6 +64,16 @@ export async function calculateVersionBump(
 		} else {
 			newVersion = semver.inc(currentVersion, `pre${bump}`, tag);
 		}
+	} else if (
+		prepareConfig?.type === "prepatch" ||
+		prepareConfig?.type === "preminor" ||
+		prepareConfig?.type === "premajor"
+	) {
+		newVersion = semver.inc(
+			currentVersion,
+			prepareConfig.type,
+			prepareConfig.tag,
+		);
 	} else {
 		newVersion = semver.inc(currentVersion, bump);
 	}

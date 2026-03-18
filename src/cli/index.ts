@@ -65,8 +65,11 @@ program
 	.command("prepare")
 	.alias("prep")
 	.description("Write a prepare config for the next release")
-	.argument("<type>", "Release type: release or prerelease")
-	.argument("[tag]", "Prerelease tag (e.g. alpha, beta). Defaults to alpha")
+	.argument(
+		"<type>",
+		"Release type: release|prepatch|preminor|premajor|prerelease",
+	)
+	.argument("[tag]", "Pre tag (e.g. alpha, beta). Defaults to alpha")
 	.option("--commit", "Commit the prepare config after writing it")
 	.option("--push", "Push to origin after committing (implies --commit)")
 	.action((type, tag, options) => prepareCommand(type, tag, options));
