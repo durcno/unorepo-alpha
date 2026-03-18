@@ -6,7 +6,7 @@ export function defineConfig(config: UnorepoConfig): UnorepoConfig {
 	return config;
 }
 
-export { changelogGenerator } from "./changelog";
+export { createChangelogGenerator } from "./changelog";
 export {
 	consumePrepareConfig,
 	parseChangenoteContent,

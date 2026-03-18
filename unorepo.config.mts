@@ -1,5 +1,5 @@
 import {
-	changelogGenerator,
+	createChangelogGenerator,
 	createChangelogSaver,
 	createGitHubReleaser,
 	createNpmPublisher,
@@ -12,7 +12,7 @@ export default defineConfig({
 		name: "unorepo-alpha",
 	},
 	changelog: {
-		generator: changelogGenerator,
+		generator: createChangelogGenerator({}),
 		saver: createChangelogSaver({
 			filepath: "changelogs/v{version}.md",
 		}),
