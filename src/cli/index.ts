@@ -6,7 +6,6 @@ import { configCommand } from "./commands/config";
 import { initCommand } from "./commands/init";
 import { prepareCommand } from "./commands/prepare";
 import { reprepareCommand } from "./commands/reprepare";
-import { tagCommand } from "./commands/tag";
 import { versionCommand } from "./commands/version";
 
 const program = new Command();
@@ -93,12 +92,5 @@ program
 	.option("--commit", "Commit the updated prepare config")
 	.option("--push", "Push to origin after committing (implies --commit)")
 	.action((options) => reprepareCommand(options));
-
-program
-	.command("tag")
-	.description(
-		"Tag changenote with PR number and author (reads BASE_REF, PR_NUMBER, PR_LOGIN from env)",
-	)
-	.action(tagCommand);
 
 program.parse();

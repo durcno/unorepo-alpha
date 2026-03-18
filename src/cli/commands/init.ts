@@ -71,12 +71,6 @@ export async function initCommand(): Promise<void> {
 	};
 
 	await writeTemplate(
-		join(tmplDir, "tag.yml"),
-		join(workflowsDir, "tag.yml"),
-		{ __CACHE__: cacheNames[pm] },
-		rootDir,
-	);
-	await writeTemplate(
 		join(tmplDir, "version.yml"),
 		join(workflowsDir, "version.yml"),
 		{ __CACHE__: cacheNames[pm], __INSTALL__: installCommands[pm] },
