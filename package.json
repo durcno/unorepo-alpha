@@ -31,8 +31,9 @@
 		"unorepo-alpha": "./dist/bin.mjs"
 	},
 	"scripts": {
-		"format": "biome format --write .",
-		"lint": "biome lint --write .",
+		"format": "biome format --write && oxfmt **/*.{md,yml,css}",
+		"format:check": "biome format --check && oxfmt --check **/*.{md,yml,css}",
+		"lint": "biome lint --write",
 		"typecheck-src": "tsc --noEmit --project tsconfig.json",
 		"typecheck-cli": "tsc --noEmit --project src/cli/tsconfig.json",
 		"typecheck": "npm run typecheck-src && npm run typecheck-cli",
@@ -55,6 +56,7 @@
 		"commander": "^14.0.3",
 		"glob": "^13.0.6",
 		"localstorage-polyfill": "^1.0.1",
+		"oxfmt": "^0.41.0",
 		"remark-frontmatter": "^5.0.0",
 		"remark-parse": "^11.0.0",
 		"remark-stringify": "^11.0.0",
