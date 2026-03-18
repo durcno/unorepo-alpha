@@ -18,6 +18,14 @@ export {
 	writeChangenote,
 	writePrepareConfig,
 } from "./changenote";
+export {
+	getConfigValue,
+	loadConfig as loadUserConfig,
+	removeConfigValue,
+	saveConfig,
+	setConfigValue,
+	type UnorepoUserConfig,
+} from "./config";
 export { createGitOps } from "./git";
 export { calculateVersionBump } from "./prepare";
 export type { NpmPublisherOptions } from "./publishers/npm";
@@ -32,6 +40,7 @@ export type {
 	ChangelogSaver,
 	Changenote,
 	ChangenoteCommit,
+	ChangenoteMetadata,
 	CommitAuthor,
 	PrepareConfig,
 	PublisherPlugin,

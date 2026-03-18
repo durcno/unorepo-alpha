@@ -7,7 +7,12 @@ import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import { unified } from "unified";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import type { BumpType, Changenote, PrepareConfig } from "./types";
+import type {
+	BumpType,
+	Changenote,
+	ChangenoteMetadata,
+	PrepareConfig,
+} from "./types";
 
 const VALID_BUMPS = new Set<string>(["major", "minor", "patch"]);
 
@@ -226,7 +231,7 @@ export async function readChangenotes(
 export async function writeChangenote(
 	changenotesDir: string,
 	id: string,
-	frontmatter: { bump: BumpType },
+	frontmatter: ChangenoteMetadata,
 	title: string,
 	body: string,
 ): Promise<string> {

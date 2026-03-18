@@ -1,6 +1,10 @@
 import { join, relative } from "node:path";
 import * as p from "@clack/prompts";
-import { writeChangenote } from "unorepo-alpha";
+import {
+	type ChangenoteMetadata,
+	getConfigValue,
+	writeChangenote,
+} from "unorepo-alpha";
 
 export async function changeCommand(): Promise<void> {
 	const rootDir = process.cwd();
@@ -32,13 +36,17 @@ export async function changeCommand(): Promise<void> {
 		process.exit(0);
 	}
 
-	// Generate a unique ID
 	const id = generateId();
+
+	const frontmatter: ChangenoteMetadata = { bump };
+
+	const author = await getConfigValue("githubUsername");
+	if (author) frontmatter.author = author;
 
 	const csPath = await writeChangenote(
 		join(rootDir, ".changenotes"),
 		id,
-		{ bump },
+		frontmatter,
 		title,
 		"",
 	);
