@@ -4,7 +4,7 @@ import { changeCommand } from "./commands/change";
 import { commitCommand } from "./commands/commit";
 import { initCommand } from "./commands/init";
 import { prepareCommand } from "./commands/prepare";
-import { retryCommand } from "./commands/retry";
+import { reprepareCommand } from "./commands/reprepare";
 import { tagCommand } from "./commands/tag";
 import { versionCommand } from "./commands/version";
 
@@ -56,13 +56,13 @@ program
 	.action(versionCommand);
 
 program
-	.command("retry")
+	.command("reprepare")
 	.description(
 		"Increment the try counter in prepare.json and optionally commit/push (for CI retries)",
 	)
 	.option("--commit", "Commit the updated prepare config")
 	.option("--push", "Push to origin after committing (implies --commit)")
-	.action((options) => retryCommand(options));
+	.action((options) => reprepareCommand(options));
 
 program
 	.command("tag")
