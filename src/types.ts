@@ -98,7 +98,7 @@ export interface UnorepoConfig {
 		owner: string;
 		name: string;
 	};
-	changelog?: {
+	changelog: {
 		generator: ChangelogGenerator;
 		saver?: ChangelogSaver;
 	};
