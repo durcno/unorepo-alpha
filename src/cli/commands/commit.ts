@@ -42,7 +42,7 @@ export async function commitCommand(options: {
 
 	if (options.push) {
 		const branch = await gitOps.currentBranch();
-		p.log.info(`Pushing to origin/${branch}`);
+		p.intro(`Pushing to origin/${branch}`);
 		await gitOps.pushSetUpstream(await gitOps.currentBranch());
 		p.outro(`Pushed to origin/${branch}`);
 	}
