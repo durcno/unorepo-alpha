@@ -73,6 +73,7 @@ export async function prepareCommand(
 		rootDir,
 		partialConfig,
 	);
+	const { packageName, newVersion } = versionBump;
 
 	const confirm = await p.confirm({
 		message: `Prepare ${versionBump.packageName}: ${versionBump.currentVersion} → ${versionBump.newVersion} ?`,
@@ -84,7 +85,7 @@ export async function prepareCommand(
 	}
 
 	const prepareConfig: PrepareConfig = {
-		newVersion: versionBump.newVersion,
+		newVersion,
 		try: 1,
 	};
 	const filePath = await writePrepareConfig(changenoteDir, prepareConfig);
@@ -93,7 +94,7 @@ export async function prepareCommand(
 	if (options.commit || options.push) {
 		const gitOps = createGitOps(rootDir);
 		await gitOps.add([".changenotes/prepare.json"]);
-		const message = `chore: prepare ${versionBump.packageName}@${versionBump.newVersion}`;
+		const message = `chore: prepare ${packageName}@${newVersion}`;
 		await gitOps.commit(message);
 		const branch = await gitOps.currentBranch();
 		p.log.success(`Committed → ${message} → ${branch}`);
@@ -102,8 +103,8 @@ export async function prepareCommand(
 			p.log.success(`Pushing → ${branch} → origin/${branch}`);
 			await gitOps.push();
 			p.log.success(`Pushed → ${branch} → origin/${branch}`);
+			p.outro(`Done. ${packageName}@${newVersion} on the way.`);
+			process.exit(0);
 		}
 	}
-
-	p.outro(`Done. Version ${versionBump.newVersion} prepared.`);
 }
