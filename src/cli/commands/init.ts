@@ -23,7 +23,7 @@ export async function initCommand(): Promise<void> {
 	p.intro("Initializing Unorepo");
 
 	// Resolve repository owner/name
-	let repo = getRepoFromPackageJson(rootDir);
+	let repo = getRepoFromPackageJson(join(rootDir, "package.json"));
 	if (!repo) {
 		const owner = await p.text({
 			message: "GitHub repository owner?",
@@ -85,9 +85,8 @@ export async function initCommand(): Promise<void> {
 
 /** Try to extract { owner, name } from a package.json repository field. */
 function getRepoFromPackageJson(
-	rootDir: string,
+	pkgPath: string,
 ): { owner: string; name: string } | null {
-	const pkgPath = join(rootDir, "package.json");
 	if (!existsSync(pkgPath)) return null;
 	try {
 		const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
