@@ -43,7 +43,7 @@ export async function prepareCommand(
 	const pkgJsonPath = join(rootDir, config.package) as PkgFileAbsPath;
 	const changenoteDir = join(rootDir, ".changenotes");
 
-	p.intro("Preparing for a version bump");
+	p.intro("Preparing for version bump");
 
 	if (!VALID_TYPES.includes(type as ReleaseType)) {
 		p.log.error(
@@ -63,12 +63,6 @@ export async function prepareCommand(
 	const isPreType = PRE_TYPES.includes(type);
 	const preTag = isPreType ? (tag ?? "alpha") : undefined;
 
-	if (isPreType) {
-		p.log.info(`Preparing a "${type}" with tag "${preTag}"`);
-	} else {
-		p.log.info("Preparing a stable release");
-	}
-
 	// Calculate version bump
 	const partialConfig = isPreType
 		? { type: type as PreReleaseType, tag: preTag as string }
@@ -80,12 +74,8 @@ export async function prepareCommand(
 		partialConfig,
 	);
 
-	p.log.message(
-		`  ${versionBump.packageName}: ${versionBump.currentVersion} → ${versionBump.newVersion} (${versionBump.bump})`,
-	);
-
 	const confirm = await p.confirm({
-		message: `Prepare ${isPreType ? `${type} (${preTag})` : "release"} with version ${versionBump.newVersion}?`,
+		message: `Prepare ${versionBump.packageName}: ${versionBump.currentVersion} → ${versionBump.newVersion} ?`,
 	});
 
 	if (p.isCancel(confirm) || !confirm) {
@@ -105,11 +95,13 @@ export async function prepareCommand(
 		await gitOps.add([".changenotes/prepare.json"]);
 		const message = `chore: prepare ${versionBump.packageName}@${versionBump.newVersion}`;
 		await gitOps.commit(message);
-		p.log.success(`Committed: ${message}`);
+		const branch = await gitOps.currentBranch();
+		p.log.success(`Committed → ${message} → ${branch}`);
 
 		if (options.push) {
+			p.log.success(`Pushing → ${branch} → origin/${branch}`);
 			await gitOps.push();
-			p.log.success("Pushed to origin");
+			p.log.success(`Pushed → ${branch} → origin/${branch}`);
 		}
 	}
 

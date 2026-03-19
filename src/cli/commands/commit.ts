@@ -36,14 +36,14 @@ export async function commitCommand(options: {
 	const changenoteFile = join(rootDir, stagedChangenotes[0]);
 	const changenote = await parseChangenotefile(changenoteFile);
 
-	p.intro(`Commiting: "${relative(rootDir, changenoteFile)}"`);
+	p.intro(`Commiting → "${relative(rootDir, changenoteFile)}"`);
 	await gitOps.commit(changenote.title);
-	p.outro(`Committed: "${changenote.title}"`);
+	const branch = await gitOps.currentBranch();
+	p.outro(`Committed → ${changenote.title} → ${branch}`);
 
 	if (options.push) {
-		const branch = await gitOps.currentBranch();
-		p.intro(`Pushing to origin/${branch}`);
-		await gitOps.pushSetUpstream(await gitOps.currentBranch());
-		p.outro(`Pushed to origin/${branch}`);
+		p.intro(`Pushing → ${branch} → origin/${branch}`);
+		await gitOps.pushSetUpstream(branch);
+		p.outro(`Pushed → ${branch} → origin/${branch}`);
 	}
 }
