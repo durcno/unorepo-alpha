@@ -17,10 +17,9 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v4
       - run: git fetch --unshallow
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 25
-          cache: __CACHE__
+      - run: npm install -g corepack
+      - name: Setup Runtime
+        uses: __RUNTIME_ACTION__
       - name: Install dependencies
         run: __INSTALL__
       - name: Build package

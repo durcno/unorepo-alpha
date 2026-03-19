@@ -63,17 +63,20 @@ export async function initCommand(): Promise<void> {
 		pnpm: "pnpm install --frozen-lockfile",
 		bun: "bun install --frozen-lockfile",
 	};
-	const cacheNames: Record<PackageManager, string> = {
-		npm: "npm",
-		yarn: "yarn",
-		pnpm: "pnpm",
-		bun: "npm",
+	const runtimeActions: Record<PackageManager, string> = {
+		npm: "actions/setup-node@v6",
+		yarn: "actions/setup-node@v6",
+		pnpm: "actions/setup-node@v6",
+		bun: "oven-sh/setup-bun@v2",
 	};
 
 	await writeTemplate(
 		join(tmplDir, "version.yml"),
 		join(workflowsDir, "version.yml"),
-		{ __CACHE__: cacheNames[pm], __INSTALL__: installCommands[pm] },
+		{
+			__INSTALL__: installCommands[pm],
+			__RUNTIME_ACTION__: runtimeActions[pm],
+		},
 		rootDir,
 	);
 
