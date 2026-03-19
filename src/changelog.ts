@@ -137,7 +137,7 @@ export function createChangelogGenerator(
 
 					const username = response.data.author?.login;
 					if (username) {
-						thanks = ` - Thanks to [@${username}](${repoUrl}/${username}) !`;
+						thanks = ` - Thanks to [@${username}](https://github.com/${username}) !`;
 					}
 				}
 				if (
