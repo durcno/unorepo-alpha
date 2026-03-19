@@ -2,7 +2,6 @@
 import { Command } from "commander";
 import { changeCommand } from "./commands/change";
 import { commitCommand } from "./commands/commit";
-import { configCommand } from "./commands/config";
 import { initCommand } from "./commands/init";
 import { prepareCommand } from "./commands/prepare";
 import { reprepareCommand } from "./commands/reprepare";
@@ -20,34 +19,6 @@ program
 	.command("init")
 	.description("Initialize unorepo for the cwd package")
 	.action(initCommand);
-
-const config = program
-	.command("config")
-	.description("Manage unorepo configuration (e.g., GitHub username)");
-
-config
-	.command("view")
-	.description("View all settings")
-	.action(() => configCommand("view"));
-
-config
-	.command("set")
-	.description("Set a config value")
-	.argument("<key>", "Config key (e.g., githubUsername)")
-	.argument("<value>", "Config value")
-	.action((key, value) => configCommand("set", key, value));
-
-config
-	.command("get")
-	.description("Get a config value")
-	.argument("<key>", "Config key")
-	.action((key) => configCommand("get", key));
-
-config
-	.command("remove")
-	.description("Remove a config value")
-	.argument("<key>", "Config key to remove")
-	.action((key) => configCommand("remove", key));
 
 program
 	.command("change")
