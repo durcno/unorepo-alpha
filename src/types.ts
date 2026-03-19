@@ -133,8 +133,8 @@ export interface UnorepoConfig {
 		 */
 		saver?: ChangelogSaver;
 	};
-	/** List of releaser plugins called after git commit during the version command */
-	releasers?: ReleaserPlugin[];
-	/** List of publisher plugins called after releasers during the version command */
+	/** List of publisher plugins called after git push during the version command */
 	publishers?: PublisherPlugin[];
+	/** List of releaser plugins called after releasers during the version command */
+	releasers?: ReleaserPlugin[];
 }
