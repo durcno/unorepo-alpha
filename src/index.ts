@@ -27,6 +27,7 @@ export {
 	type UnorepoUserConfig,
 } from "./config";
 export { createGitOps } from "./git";
+export { readPkg, updatePkgVersion } from "./pkg";
 export { calculateVersionBump } from "./prepare";
 export type { NpmPublisherOptions } from "./publishers/npm";
 export { createNpmPublisher } from "./publishers/npm";
@@ -42,13 +43,15 @@ export type {
 	ChangenoteCommit,
 	ChangenoteMetadata,
 	CommitAuthor,
+	Package,
+	PkgFileAbsPath,
 	PrepareConfig,
 	PublisherPlugin,
 	ReleaserPlugin,
 	UnorepoConfig,
 	VersionBump,
 } from "./types";
-export { loadConfig, readPackageJson } from "./utils";
+export { loadConfig } from "./utils";
 export {
 	applyVersionBump,
 	consumeChangenotes,

@@ -1,3 +1,19 @@
+/** A package in the monorepo */
+export type Package = {
+	/** Package name */
+	name: string;
+	/** Package version */
+	version: string;
+};
+
+/** Branded string type representing a package file path */
+export type PkgFileAbsPath = string & { readonly __brand: "PkgFileAbsPath" };
+
+/** Branded string type representing a dirty file path */
+export type DirtyFileAbsPath = string & {
+	readonly __brand: "DirtyFileAbsPath";
+};
+
 /** Semantic version bump type */
 export type BumpType = "major" | "minor" | "patch";
 
@@ -70,7 +86,11 @@ export type ChangelogSaver = (props: {
 	changelog: string;
 	versionBump: VersionBump;
 	configDir: string;
-}) => Promise<string | string[] | undefined> | string | string[] | undefined;
+}) =>
+	| Promise<DirtyFileAbsPath | DirtyFileAbsPath[] | undefined>
+	| DirtyFileAbsPath
+	| DirtyFileAbsPath[]
+	| undefined;
 
 /**
  * A releaser plugin function.
@@ -97,6 +117,8 @@ export type PublisherPlugin = (props: {
 
 /** Configuration for Unorepo */
 export interface UnorepoConfig {
+	/** Relative path to the package file */
+	package: string;
 	repository: {
 		owner: string;
 		name: string;

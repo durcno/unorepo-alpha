@@ -1,6 +1,6 @@
 import { promises as fs } from "node:fs";
 import { dirname, join } from "node:path";
-import type { ChangelogSaver, VersionBump } from "./types";
+import type { ChangelogSaver, DirtyFileAbsPath, VersionBump } from "./types";
 import { escapePackageName } from "./utils";
 
 export interface ChangelogSaverOptions {
@@ -43,7 +43,11 @@ export interface ChangelogSaverOptions {
 export function createChangelogSaver(
 	options: ChangelogSaverOptions,
 ): ChangelogSaver {
-	return async ({ changelog, versionBump, configDir }): Promise<string> => {
+	return async ({
+		changelog,
+		versionBump,
+		configDir,
+	}): Promise<DirtyFileAbsPath> => {
 		// Resolve the filepath
 		let filepath: string;
 		if (typeof options.filepath === "function") {
@@ -67,6 +71,6 @@ export function createChangelogSaver(
 		// Write the changelog
 		await fs.writeFile(absolutePath, changelog, "utf-8");
 
-		return absolutePath;
+		return absolutePath as unknown as DirtyFileAbsPath;
 	};
 }

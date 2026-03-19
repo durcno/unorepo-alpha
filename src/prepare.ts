@@ -1,12 +1,12 @@
-import { join } from "node:path";
 import * as semver from "semver";
+import { readPkg } from "./pkg";
 import type {
 	BumpType,
 	Changenote,
 	ChangenoteCommit,
+	PkgFileAbsPath,
 	VersionBump,
 } from "./types";
-import { readPackageJson } from "./utils";
 
 const BUMP_PRIORITY: Record<BumpType, number> = {
 	major: 3,
@@ -27,6 +27,7 @@ function highestBump(bumps: BumpType[]): BumpType {
 
 /** Calculate version bump from changenotes */
 export async function calculateVersionBump(
+	pkgFilePath: PkgFileAbsPath,
 	changenotes: (Changenote & { commit?: ChangenoteCommit })[],
 	rootDir: string,
 	prepareConfig?:
@@ -36,8 +37,7 @@ export async function calculateVersionBump(
 				tag: string;
 		  },
 ): Promise<VersionBump> {
-	const pkgJsonPath = join(rootDir, "package.json");
-	const pkgJson = readPackageJson(pkgJsonPath);
+	const pkgJson = readPkg(pkgFilePath, rootDir);
 	const currentVersion = pkgJson.version;
 	const packageName = pkgJson.name;
 

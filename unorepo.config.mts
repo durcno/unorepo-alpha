@@ -7,6 +7,7 @@ import {
 } from "unorepo-alpha";
 
 export default defineConfig({
+	package: "package.json",
 	repository: {
 		owner: "durcno",
 		name: "unorepo-alpha",

@@ -1,9 +1,8 @@
 import fs from "node:fs";
 import type { Changenote, VersionBump } from "./types";
-import { readPackageJson } from "./utils";
 
 /** Detect indentation from JSON content */
-function detectIndentation(content: string): string | number {
+export function detectIndentation(content: string): string | number {
 	// Look for indented lines in the JSON
 	const match = content.match(/\n([ \t]+)["'{]/);
 	if (!match) {
@@ -31,7 +30,7 @@ export function applyVersionBump(
 	const packageJsonRaw = fs.readFileSync(pkgJsonPath, "utf-8");
 	const indent = detectIndentation(packageJsonRaw);
 
-	const pkgJson = readPackageJson(pkgJsonPath);
+	const pkgJson = JSON.parse(packageJsonRaw);
 	pkgJson.version = newVersion;
 
 	fs.writeFileSync(

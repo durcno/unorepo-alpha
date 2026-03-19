@@ -3,9 +3,12 @@ import * as p from "@clack/prompts";
 import {
 	calculateVersionBump,
 	createGitOps,
+	loadConfig,
+	type PkgFileAbsPath,
 	readChangenotes,
 	writePrepareConfig,
 } from "unorepo-alpha";
+import { CONFIG_FILE_NAME } from "../../const";
 import type { PrepareConfig } from "../../types";
 
 const VALID_TYPES = [
@@ -36,6 +39,8 @@ export async function prepareCommand(
 	options: PrepareCommandOptions = {},
 ): Promise<void> {
 	const rootDir = process.cwd();
+	const config = await loadConfig(join(rootDir, CONFIG_FILE_NAME));
+	const pkgJsonPath = join(rootDir, config.package) as PkgFileAbsPath;
 	const changenoteDir = join(rootDir, ".changenotes");
 
 	p.intro("Preparing for a version bump");
@@ -69,6 +74,7 @@ export async function prepareCommand(
 		? { type: type as PreReleaseType, tag: preTag as string }
 		: { type: "release" as const };
 	const versionBump = await calculateVersionBump(
+		pkgJsonPath as PkgFileAbsPath,
 		changenotes,
 		rootDir,
 		partialConfig,
@@ -87,8 +93,11 @@ export async function prepareCommand(
 		process.exit(0);
 	}
 
-	const config: PrepareConfig = { newVersion: versionBump.newVersion, try: 1 };
-	const filePath = await writePrepareConfig(changenoteDir, config);
+	const prepareConfig: PrepareConfig = {
+		newVersion: versionBump.newVersion,
+		try: 1,
+	};
+	const filePath = await writePrepareConfig(changenoteDir, prepareConfig);
 	p.log.success(`Wrote prepare config: ${relative(rootDir, filePath)}`);
 
 	if (options.commit || options.push) {

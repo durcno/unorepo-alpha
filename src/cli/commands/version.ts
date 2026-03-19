@@ -1,7 +1,6 @@
 import { join, relative } from "node:path";
 import * as p from "@clack/prompts";
 import {
-	applyVersionBump,
 	type BumpType,
 	type Changenote,
 	type ChangenoteCommit,
@@ -9,12 +8,15 @@ import {
 	consumePrepareConfig,
 	createGitOps,
 	loadConfig,
+	type PkgFileAbsPath,
 	readChangenotes,
-	readPackageJson,
+	readPkg,
 	readPrepareConfig,
+	updatePkgVersion,
 	type VersionBump,
 } from "unorepo-alpha";
 import { CONFIG_FILE_NAME } from "../../const";
+import type { DirtyFileAbsPath } from "../../types";
 
 export interface VersionCommandOptions {
 	commit?: boolean;
@@ -29,6 +31,7 @@ export async function versionCommand(
 ): Promise<void> {
 	const rootDir = process.cwd();
 	const config = await loadConfig(join(rootDir, CONFIG_FILE_NAME));
+	const pkgJsonPath = join(rootDir, config.package) as PkgFileAbsPath;
 
 	p.intro("Reading prepare.json...");
 
@@ -60,8 +63,6 @@ export async function versionCommand(
 	}
 
 	// Read current package.json for package name and current version
-	const pkgJsonPath = join(rootDir, "package.json");
-	const pkgJson = readPackageJson(pkgJsonPath);
 
 	// Build the VersionBump from prepare config + changenotes
 	const bumps = new Set(changenotes.map((cn) => cn.meta.bump));
@@ -69,20 +70,22 @@ export async function versionCommand(
 		bumps.has(b as BumpType),
 	) as BumpType;
 
+	// Track all files that are created, edited, or deleted
+	const dirtyFiles: DirtyFileAbsPath[] = [];
+
+	dirtyFiles.push(...updatePkgVersion(pkgJsonPath, rootDir, newVersion));
+
+	p.log.success(
+		`Updated ${relative(rootDir, pkgJsonPath)} - version: ${newVersion}`,
+	);
+
+	const pkgJson = readPkg(pkgJsonPath, rootDir);
 	const versionBump: VersionBump = {
 		packageName: pkgJson.name,
 		currentVersion: pkgJson.version,
 		newVersion,
 		bump,
 	};
-
-	// Track all files that are created, edited, or deleted
-	const trackedFiles: string[] = [pkgJsonPath];
-
-	applyVersionBump(versionBump, pkgJsonPath);
-	p.log.success(
-		`Updated ${relative(rootDir, pkgJsonPath)} - version: ${newVersion}`,
-	);
 
 	// Generate changelog
 	const changelog = await config.changelog.generator(
@@ -100,7 +103,7 @@ export async function versionCommand(
 		});
 		if (savedPaths) {
 			const paths = Array.isArray(savedPaths) ? savedPaths : [savedPaths];
-			trackedFiles.push(...paths);
+			dirtyFiles.push(...paths);
 		}
 		p.log.success("Changelog saved");
 	}
@@ -109,12 +112,14 @@ export async function versionCommand(
 	consumeChangenotes(allChangenotes);
 	p.log.success(`Used ${allChangenotes.length} changenote(s)`);
 	for (const cn of allChangenotes) {
-		trackedFiles.push(cn.filePath);
+		dirtyFiles.push(cn.filePath as unknown as DirtyFileAbsPath);
 	}
 
 	// Remove prepare config
 	await consumePrepareConfig(changenotesDir);
-	trackedFiles.push(join(changenotesDir, "prepare.json"));
+	dirtyFiles.push(
+		join(changenotesDir, "prepare.json") as unknown as DirtyFileAbsPath,
+	);
 
 	if (
 		options.commit ||
@@ -124,7 +129,7 @@ export async function versionCommand(
 		options.release
 	) {
 		await gitOps.ensureGitIdentity();
-		await gitOps.add(trackedFiles);
+		await gitOps.add(dirtyFiles);
 		const message = `Release ${pkgJson.name}@${newVersion}`;
 		await gitOps.commit(message);
 		p.log.success(`Committed: ${message}`);

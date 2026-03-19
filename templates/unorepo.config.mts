@@ -6,6 +6,7 @@ import {
 } from "unorepo-alpha";
 
 export default defineConfig({
+  package: "__PACKAGE__",
 	repository: {
 		owner: "__OWNER__",
 		name: "__REPO__",

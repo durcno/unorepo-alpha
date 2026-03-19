@@ -51,6 +51,7 @@ export async function initCommand(): Promise<void> {
 		join(tmplDir, CONFIG_FILE_NAME),
 		join(rootDir, CONFIG_FILE_NAME),
 		{
+			__PACKAGE__: "package.json",
 			__OWNER__: repo.owner,
 			__REPO__: repo.name,
 		},
