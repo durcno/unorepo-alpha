@@ -1,24 +1,6 @@
 import fs from "node:fs";
 import type { Changenote, VersionBump } from "./types";
-
-/** Detect indentation from JSON content */
-export function detectIndentation(content: string): string | number {
-	// Look for indented lines in the JSON
-	const match = content.match(/\n([ \t]+)["'{]/);
-	if (!match) {
-		return 2; // default to 2 spaces
-	}
-
-	const indent = match[1];
-
-	// Check if it's tabs
-	if (indent.includes("\t")) {
-		return "\t";
-	}
-
-	// Otherwise it's spaces, return the count
-	return indent.length;
-}
+import { detectIndentation } from "./utils";
 
 /** Apply version bump to package.json */
 export function applyVersionBump(

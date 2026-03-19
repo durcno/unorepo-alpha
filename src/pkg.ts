@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import type { DirtyFileAbsPath, Package, PkgFileAbsPath } from "./types";
-import { detectIndentation } from "./version";
+import { detectIndentation } from "./utils";
 
 /**
  * Read the name and version of a package from its package.json.
