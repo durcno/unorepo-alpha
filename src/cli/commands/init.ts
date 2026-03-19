@@ -47,13 +47,17 @@ export async function initCommand(): Promise<void> {
 	}
 
 	// Config file
-	const configContent = readFileSync(join(tmplDir, CONFIG_FILE_NAME), "utf-8")
-		.replace("__OWNER__", repo.owner)
-		.replace("__REPO__", repo.name);
-	await fs.writeFile(join(rootDir, CONFIG_FILE_NAME), configContent, "utf-8");
-	p.log.success(`Created ${CONFIG_FILE_NAME}`);
+	await writeTemplate(
+		join(tmplDir, CONFIG_FILE_NAME),
+		join(rootDir, CONFIG_FILE_NAME),
+		{
+			__OWNER__: repo.owner,
+			__REPO__: repo.name,
+		},
+		rootDir,
+	);
 
-	// GitHub Actions workflows
+	// Version workflow
 	const workflowsDir = join(rootDir, ".github", "workflows");
 	await fs.mkdir(workflowsDir, { recursive: true });
 
