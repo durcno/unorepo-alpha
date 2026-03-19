@@ -53,7 +53,9 @@ program
 	.command("change")
 	.alias("cng")
 	.description("Add a new changenote")
-	.action(changeCommand);
+	.argument("[bump]", "Bump type: patch, minor, or major")
+	.argument("[title]", "Title of the change")
+	.action((bump, title) => changeCommand(bump, title));
 
 program
 	.command("commit")

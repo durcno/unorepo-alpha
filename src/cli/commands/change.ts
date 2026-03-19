@@ -2,34 +2,51 @@ import { join, relative } from "node:path";
 import * as p from "@clack/prompts";
 import { type ChangenoteMetadata, writeChangenote } from "unorepo-alpha";
 
-export async function changeCommand(): Promise<void> {
+export async function changeCommand(
+	argBump?: string,
+	argTitle?: string,
+): Promise<void> {
 	const rootDir = process.cwd();
 
 	p.intro("Adding a new changenote!");
 
-	const bump = await p.select({
-		message: "Bump type?",
-		options: [
-			{ value: "patch" as const, label: "patch", hint: "Bug fixes" },
-			{ value: "minor" as const, label: "minor", hint: "New features" },
-			{ value: "major" as const, label: "major", hint: "Breaking changes" },
-		],
-	});
+	let bump: "patch" | "minor" | "major";
 
-	if (p.isCancel(bump)) {
-		p.cancel("Cancelled");
-		process.exit(0);
+	if (argBump && ["patch", "minor", "major"].includes(argBump)) {
+		bump = argBump as "patch" | "minor" | "major";
+	} else {
+		const selected = await p.select({
+			message: "Bump type?",
+			options: [
+				{ value: "patch" as const, label: "patch", hint: "Bug fixes" },
+				{ value: "minor" as const, label: "minor", hint: "New features" },
+				{ value: "major" as const, label: "major", hint: "Breaking changes" },
+			],
+		});
+
+		if (p.isCancel(selected)) {
+			p.cancel("Cancelled");
+			process.exit(0);
+		}
+		bump = selected;
 	}
 
-	const title = await p.text({
-		message: "Title of the change?",
-		placeholder: "feat: Short description of what changed...",
-		validate: (val) => (val?.trim() ? undefined : "Title is required"),
-	});
+	let title: string;
 
-	if (p.isCancel(title)) {
-		p.cancel("Cancelled");
-		process.exit(0);
+	if (argTitle) {
+		title = argTitle;
+	} else {
+		const text = await p.text({
+			message: "Title of the change?",
+			placeholder: "feat: Short description of what changed...",
+			validate: (val) => (val?.trim() ? undefined : "Title is required"),
+		});
+
+		if (p.isCancel(text)) {
+			p.cancel("Cancelled");
+			process.exit(0);
+		}
+		title = text;
 	}
 
 	const id = generateId();
