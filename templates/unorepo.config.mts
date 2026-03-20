@@ -1,5 +1,6 @@
 import {
 	createChangelogGenerator,
+	createFormatter,
 	createGitHubReleaser,
 	createNpmPublisher,
 	defineConfig,
@@ -26,4 +27,7 @@ export default defineConfig({
 			token: process.env.GITHUB_TOKEN!,
 		}),
 	],
+	// formatters: [
+	//   createFormatter({ extensions: ["md", "json"], command: "oxfmt" }),
+	// ],
 });

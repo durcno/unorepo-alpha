@@ -26,6 +26,8 @@ export {
 	setConfigValue,
 	type UnorepoUserConfig,
 } from "./config";
+export type { FormatterOptions } from "./formatter";
+export { createFormatter, formatFiles } from "./formatter";
 export { createGitOps } from "./git";
 export { readPkg, updatePkgVersion } from "./pkg";
 export { calculateVersionBump } from "./prepare";
@@ -43,6 +45,7 @@ export type {
 	ChangenoteCommit,
 	ChangenoteMetadata,
 	CommitAuthor,
+	FormatterPlugin,
 	Package,
 	PkgFileAbsPath,
 	PrepareConfig,

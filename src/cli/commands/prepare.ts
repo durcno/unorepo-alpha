@@ -3,6 +3,7 @@ import * as p from "@clack/prompts";
 import {
 	calculateVersionBump,
 	createGitOps,
+	formatFiles,
 	loadConfig,
 	type PkgFileAbsPath,
 	readChangenotes,
@@ -90,6 +91,9 @@ export async function prepareCommand(
 	};
 	const filePath = await writePrepareConfig(changenoteDir, prepareConfig);
 	p.log.success(`Wrote prepare config: ${relative(rootDir, filePath)}`);
+
+	// Run formatter plugins on the created file
+	await formatFiles([filePath], config, rootDir);
 
 	if (options.commit || options.push) {
 		const gitOps = createGitOps(rootDir);

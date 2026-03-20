@@ -7,6 +7,7 @@ import {
 	consumeChangenotes,
 	consumePrepareConfig,
 	createGitOps,
+	formatFiles,
 	loadConfig,
 	type PkgFileAbsPath,
 	readChangenotes,
@@ -58,7 +59,7 @@ export async function versionCommand(
 	const changenotes: (Changenote & { commit: ChangenoteCommit })[] = [];
 
 	for (const cn of allChangenotes) {
-		const meta = await gitOps.getFileMeta(cn.filePath);
+		const meta = await gitOps.getFileAddCommit(cn.filePath);
 		changenotes.push({ ...cn, commit: meta });
 	}
 
@@ -120,6 +121,9 @@ export async function versionCommand(
 	dirtyFiles.push(
 		join(changenotesDir, "prepare.json") as unknown as DirtyFileAbsPath,
 	);
+
+	// Run formatter plugins on created/modified files (deleted files are filtered out)
+	await formatFiles(dirtyFiles, config, rootDir);
 
 	if (
 		options.commit ||

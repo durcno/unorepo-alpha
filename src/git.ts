@@ -22,13 +22,13 @@ export function createGitOps(repoDir: string = ".") {
 				const seen = new Set<string>();
 				const commitAuthors: CommitAuthor[] = [];
 
-				for (const entry of log.all) {
-					const key = (entry as unknown as { email: string }).email;
-					if (!seen.has(key)) {
-						seen.add(key);
+				// reverse the order of the commits to get the most recent first
+				for (const entry of log.all.toReversed()) {
+					if (!seen.has(entry.email)) {
+						seen.add(entry.email);
 						commitAuthors.push({
-							name: (entry as unknown as { name: string }).name,
-							email: key,
+							name: entry.name,
+							email: entry.email,
 						});
 					}
 				}
@@ -39,8 +39,8 @@ export function createGitOps(repoDir: string = ".") {
 			}
 		},
 
-		async getFileMeta(filePath: string): Promise<ChangenoteCommit> {
-			const gitRawLog = await git.raw([
+		async getFileAddCommit(filePath: string): Promise<ChangenoteCommit> {
+			const rawLog = await git.raw([
 				"log",
 				"--diff-filter=A",
 				"--follow",
@@ -48,7 +48,7 @@ export function createGitOps(repoDir: string = ".") {
 				filePath,
 			]);
 
-			const log = JSON.parse(gitRawLog);
+			const log = JSON.parse(rawLog.trim());
 			const authors = await this.getFileAuthors(filePath);
 
 			return {

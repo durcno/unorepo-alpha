@@ -115,6 +115,18 @@ export type PublisherPlugin = (props: {
 	config: UnorepoConfig;
 }) => Promise<void> | void;
 
+/**
+ * A formatter plugin.
+ * Declares which file extensions it handles and a function that formats them in place.
+ * Called after CLI commands create or modify files.
+ */
+export type FormatterPlugin = {
+	/** File extensions this formatter handles (without leading dot, e.g. ["json", "md"]) */
+	extensions: string[];
+	/** Format the given files in place */
+	format: (filePaths: string[], rootDir: string) => Promise<void> | void;
+};
+
 /** Configuration for Unorepo */
 export interface UnorepoConfig {
 	/** Relative path to the package file */
@@ -137,4 +149,6 @@ export interface UnorepoConfig {
 	publishers?: PublisherPlugin[];
 	/** List of releaser plugins called after releasers during the version command */
 	releasers?: ReleaserPlugin[];
+	/** Formatter plugins called on files created/changed by CLI commands */
+	formatters?: FormatterPlugin[];
 }
