@@ -1,6 +1,7 @@
 import { join, relative } from "node:path";
 import * as p from "@clack/prompts";
 import { type ChangenoteMetadata, writeChangenote } from "unorepo-alpha";
+import { CHANGENOTE_BODY_PLACEHOLDER } from "../../const";
 
 export async function changeCommand(
 	argBump?: string,
@@ -58,7 +59,7 @@ export async function changeCommand(
 		id,
 		frontmatter,
 		title,
-		"",
+		CHANGENOTE_BODY_PLACEHOLDER,
 	);
 
 	p.log.success(`Changenote added! ${relative(rootDir, csPath)}`);

@@ -118,11 +118,7 @@ export function stringifyChangenote(changenote: ChangenoteMarkdown): string {
 	lines.push("---");
 	lines.push(`# ${changenote.title}`);
 	lines.push("");
-	lines.push(
-		changenote.body.trim()
-			? changenote.body.trim()
-			: "<!-- Add a body here -->",
-	);
+	lines.push(changenote.body.trim());
 	return lines.join("\n");
 }
 
