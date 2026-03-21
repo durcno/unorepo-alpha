@@ -64,7 +64,7 @@ export interface VersionBump {
 }
 
 /** Prepare configuration written by the `prepare` command */
-export type PrepareConfig = { newVersion: string; try?: number };
+export type PrepareConfig = { newVersion: string; try: number };
 
 /**
  * A changelog generator plugin function.
@@ -94,7 +94,7 @@ export type ChangelogSaver = (props: {
 
 /**
  * A releaser plugin function.
- * Called after the git commit during the version command.
+ * Called after the "Publisher" plugins during the version command.
  * Responsible for publishing a release (e.g. creating a GitHub release).
  */
 export type ReleaserPlugin = (props: {
@@ -106,7 +106,7 @@ export type ReleaserPlugin = (props: {
 
 /**
  * A publisher plugin function.
- * Called after the git commit and tag during the version command.
+ * Called after the git push during the version command.
  * Responsible for publishing the package to a registry (e.g. npm publish).
  */
 export type PublisherPlugin = (props: {
