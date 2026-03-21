@@ -147,7 +147,7 @@ export interface UnorepoConfig {
 	};
 	/** List of publisher plugins called after git push during the version command */
 	publishers?: PublisherPlugin[];
-	/** List of releaser plugins called after releasers during the version command */
+	/** List of releaser plugins called after publishers during the version command */
 	releasers?: ReleaserPlugin[];
 	/** Formatter plugins called on files created/changed by CLI commands */
 	formatters?: FormatterPlugin[];
