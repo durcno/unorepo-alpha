@@ -4,6 +4,7 @@ import { changeCommand } from "./commands/change";
 import { commitCommand } from "./commands/commit";
 import { initCommand } from "./commands/init";
 import { prepareCommand } from "./commands/prepare";
+import { previewCommand } from "./commands/preview";
 import { reprepareCommand } from "./commands/reprepare";
 import { versionCommand } from "./commands/version";
 
@@ -73,5 +74,10 @@ program
 	.option("--commit", "Commit the updated prepare config")
 	.option("--push", "Push to origin after committing (implies --commit)")
 	.action((options) => reprepareCommand(options));
+
+program
+	.command("preview")
+	.description("Generate changelog preview and open in browser")
+	.action(previewCommand);
 
 program.parse();
