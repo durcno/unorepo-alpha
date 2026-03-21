@@ -1,6 +1,7 @@
 import {
 	createChangelogGenerator,
 	createChangelogSaver,
+	createFormatter,
 	createGitHubReleaser,
 	createNpmPublisher,
 	defineConfig,
@@ -20,6 +21,10 @@ export default defineConfig({
 			filepath: "changelogs/v{version}.md",
 		}),
 	},
+	formatters: [
+		createFormatter({ extensions: ["json"], command: "biome format --write" }),
+		createFormatter({ extensions: ["md"], command: "oxfmt" }),
+	],
 	publishers: [
 		createNpmPublisher({
 			provenance: true,
