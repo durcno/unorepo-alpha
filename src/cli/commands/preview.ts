@@ -8,7 +8,6 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import {
-	type BumpType,
 	type Changenote,
 	type ChangenoteCommit,
 	createGitOps,
@@ -51,18 +50,12 @@ export async function previewCommand(): Promise<void> {
 	const pkgJsonPath = join(rootDir, "package.json");
 	const pkgJson = readPkg(pkgJsonPath as PkgFileAbsPath, rootDir);
 
-	// Build bump type from changenotes
-	const bumps = new Set(changenotes.map((cn) => cn.meta.bump));
-	const bump = (["major", "minor", "patch"].find((b) =>
-		bumps.has(b as BumpType),
-	) ?? "patch") as BumpType;
-
 	// Build a fake VersionBump — no prepare.json needed
 	const versionBump: VersionBump = {
 		packageName: pkgJson.name,
 		currentVersion: pkgJson.version,
 		newVersion: "x.x.x",
-		bump,
+		bump: "patch",
 	};
 
 	// Generate changelog markdown
