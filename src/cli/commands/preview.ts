@@ -10,6 +10,7 @@ import { unified } from "unified";
 import {
 	type Changenote,
 	type ChangenoteCommit,
+	type CommitAuthor,
 	createGitOps,
 	loadConfig,
 	type PkgFileAbsPath,
@@ -39,11 +40,15 @@ export async function previewCommand(): Promise<void> {
 
 	// Enrich changenotes with git metadata
 	const gitOps = createGitOps(rootDir);
-	const changenotes: (Changenote & { commit: ChangenoteCommit })[] = [];
+	const changenotes: (Changenote & {
+		commit: ChangenoteCommit;
+		authors: CommitAuthor[];
+	})[] = [];
 
 	for (const cn of allChangenotes) {
 		const meta = await gitOps.getFileAddCommit(cn.filePath);
-		changenotes.push({ ...cn, commit: meta });
+		const authors = await gitOps.getFileAuthors(cn.filePath);
+		changenotes.push({ ...cn, commit: meta, authors });
 	}
 
 	// Read package.json for the package name

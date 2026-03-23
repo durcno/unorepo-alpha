@@ -17,7 +17,7 @@ import {
 	type VersionBump,
 } from "unorepo-alpha";
 import { CONFIG_FILE_NAME } from "../../const";
-import type { DirtyFileAbsPath } from "../../types";
+import type { CommitAuthor, DirtyFileAbsPath } from "../../types";
 
 export interface VersionCommandOptions {
 	commit?: boolean;
@@ -56,11 +56,15 @@ export async function versionCommand(
 
 	// Enrich changenotes with git metadata
 	const gitOps = createGitOps(rootDir);
-	const changenotes: (Changenote & { commit: ChangenoteCommit })[] = [];
+	const changenotes: (Changenote & {
+		commit: ChangenoteCommit;
+		authors: CommitAuthor[];
+	})[] = [];
 
 	for (const cn of allChangenotes) {
 		const meta = await gitOps.getFileAddCommit(cn.filePath);
-		changenotes.push({ ...cn, commit: meta });
+		const authors = await gitOps.getFileAuthors(cn.filePath);
+		changenotes.push({ ...cn, commit: meta, authors });
 	}
 
 	// Read current package.json for package name and current version

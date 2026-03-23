@@ -42,11 +42,9 @@ export interface ChangenoteCommit {
 	hash: string;
 	/** Commit subject for the changenote file */
 	subject: string;
-	/** Contributors who authored/edited the changenote file */
-	authors: CommitAuthor[];
 }
 
-/** A contributor extracted from git history */
+/** A Contributor who added/edited the changenote file */
 export interface CommitAuthor {
 	name: string;
 	email: string;
@@ -72,7 +70,10 @@ export type PrepareConfig = { newVersion: string; try: number };
  */
 export type ChangelogGenerator = (
 	bump: VersionBump,
-	changenotes: (Changenote & { commit: ChangenoteCommit })[],
+	changenotes: (Changenote & {
+		commit: ChangenoteCommit;
+		authors: CommitAuthor[];
+	})[],
 	config: UnorepoConfig,
 ) => Promise<string>;
 

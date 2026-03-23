@@ -49,12 +49,10 @@ export function createGitOps(repoDir: string = ".") {
 			]);
 
 			const log = JSON.parse(rawLog.trim());
-			const authors = await this.getFileAuthors(filePath);
 
 			return {
 				hash: log.hash,
 				subject: log.subject,
-				authors: authors,
 			};
 		},
 

@@ -139,12 +139,8 @@ export function createChangelogGenerator(
 						thanks = ` - Thanks to [@${username}](https://github.com/${username}) !`;
 					}
 				}
-				if (
-					thanks === "" &&
-					cn.commit?.authors &&
-					cn.commit.authors.length > 0
-				) {
-					thanks = ` - Thanks to ${cn.commit.authors
+				if (thanks === "" && cn.authors.length > 0) {
+					thanks = ` - Thanks to ${cn.authors
 						.map((ca) => `[${ca.name}](mailto:${ca.email})`)
 						.join(", ")} !`;
 				}
