@@ -5,6 +5,28 @@ import type { ChangenoteCommit, CommitAuthor } from "./types";
 export function createGitOps(repoDir: string = ".") {
 	const git: SimpleGit = simpleGit(repoDir);
 
+	/** Deepen a shallow clone until the add commit for a file is reachable */
+	async function deepenForFile(filePath: string): Promise<void> {
+		while (true) {
+			const addLog = await git
+				.raw(["log", "--diff-filter=A", "--follow", "--format=%H", filePath])
+				.catch(() => "");
+
+			if (addLog.trim()) return;
+
+			const shallow =
+				(await git.raw(["rev-parse", "--is-shallow-repository"])).trim() ===
+				"true";
+			if (!shallow) return;
+
+			try {
+				await git.fetch(["--deepen", "30"]);
+			} catch {
+				return;
+			}
+		}
+	}
+
 	return {
 		async currentBranch() {
 			const print = await git.raw(["branch", "--show-current"]);
@@ -12,6 +34,7 @@ export function createGitOps(repoDir: string = ".") {
 		},
 
 		async getFileAuthors(file: string): Promise<CommitAuthor[]> {
+			await deepenForFile(file);
 			try {
 				const log = await git.log({
 					file: file,
@@ -40,6 +63,7 @@ export function createGitOps(repoDir: string = ".") {
 		},
 
 		async getFileAddCommit(filePath: string): Promise<ChangenoteCommit> {
+			await deepenForFile(filePath);
 			const rawLog = await git.raw([
 				"log",
 				"--diff-filter=A",
