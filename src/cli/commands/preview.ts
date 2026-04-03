@@ -212,7 +212,7 @@ function buildHtmlPage(packageName: string, body: string): string {
     }
 
     .content blockquote p {
-      margin: none;
+      margin: 0px;
     }
 
     .content code {
