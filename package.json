@@ -65,7 +65,7 @@
 		"remark-rehype": "^11.1.2",
 		"remark-stringify": "^11.0.0",
 		"simple-git": "^3.33.0",
-		"tsdown": "^0.21.4",
+		"tsdown": "^0.21.7",
 		"typescript": "^5.7.0",
 		"unified": "^11.0.0",
 		"unorepo-alpha": "link:",
