@@ -41,7 +41,8 @@
 		"build-cli": "tsdown --config src/cli/tsdown.config.ts",
 		"build": "npm run build-src && npm run build-cli",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"web": "cd website && npm run start"
 	},
 	"dependencies": {
 		"semver": "^7.7.4"
